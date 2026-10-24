@@ -1,0 +1,13 @@
+{
+  "background_color": "#121212",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "DuitkuAkeh",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "DuitkuAkeh",
+  "start_url": "/",
+  "theme_color": "#0c8b4d",
+  "description": "Aplikasi DuitkuAkeh hadir sebagai pencatat keuangan pribadi.",
+  "lang": "id"
+}
