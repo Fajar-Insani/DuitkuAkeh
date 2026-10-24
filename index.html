@@ -40,10 +40,10 @@
     <!-- Main Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
 
-        <!-- Layout Utama: Kolom Kiri (Saldo & Form Cepat), Kolom Tengah (Grafik & Beban), Kolom Kanan (Riwayat & Lainnya) -->
+        <!-- Layout Utama -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- KOLOM 1: "Etalase Utama" (Saldo & Form Input Transaksi Berdampingan Erat) -->
+            <!-- KOLOM 1: Saldo & Form Input Transaksi -->
             <div class="space-y-6">
                 
                 <!-- Kartu Saldo Utama (Modal All-In) -->
@@ -63,7 +63,7 @@
                     </div>
                 </div>
 
-                <!-- Form Catat Transaksi (Diletakkan Langsung di Bawah Saldo) -->
+                <!-- Form Catat Transaksi Cepat -->
                 <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg">
                     <h3 class="text-base font-semibold mb-4 flex items-center gap-2">
                         <span>📝</span> Catat Transaksi Cepat
@@ -107,7 +107,7 @@
                     </form>
                 </div>
 
-                <!-- Panel Sumber Dana -->
+                <!-- Panel Sumber Dana (Dilengkapi Tombol Edit Saldo) -->
                 <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="text-sm font-semibold flex items-center gap-2">
@@ -122,7 +122,7 @@
 
             </div>
 
-            <!-- KOLOM 2: "Rak Tengah" (Grafik Analisis, Beban, & Panel Laba Bersih di Bawah Grafik) -->
+            <!-- KOLOM 2: Grafik Analisis & Laba Bersih di Bawah -->
             <div class="space-y-6">
                 
                 <!-- Grafik Garis (Tren Arus Kas) -->
@@ -145,7 +145,7 @@
                     </div>
                 </div>
 
-                <!-- PANEL LABA BERSIH & FILTER WAKTU (Ditaruh di Bawah Grafik sesuai Permintaan) -->
+                <!-- PANEL LABA BERSIH & FILTER WAKTU (Di Bawah Grafik) -->
                 <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
@@ -180,7 +180,7 @@
 
             </div>
 
-            <!-- KOLOM 3: "Kasir & Gudang" (Top Tier, Celengan, & Riwayat) -->
+            <!-- KOLOM 3: Top Tier, Celengan, & Riwayat -->
             <div class="space-y-6 flex flex-col">
                 
                 <!-- Top Tier Transaksi -->
@@ -232,7 +232,7 @@
 
         </div>
 
-        <!-- Bagian Paling Bawah: Slot Kenangan & Riwayat Update Web/APK -->
+        <!-- Slot Kenangan & Riwayat Update -->
         <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg space-y-4">
             <div class="flex justify-between items-center border-b border-borderGray pb-3">
                 <h3 class="text-base font-semibold flex items-center gap-2 text-brandYellow">
@@ -257,10 +257,10 @@
                 </div>
                 <div class="bg-darkGray p-4 rounded-xl border border-borderGray space-y-2">
                     <div class="flex justify-between items-center font-semibold text-gray-200">
-                        <span>Versi 4.2 Pro (Layout Supermarket)</span>
+                        <span>Versi 4.3 Pro (Edit Nominal Dompet)</span>
                         <span class="text-blue-400">Terbaru</span>
                     </div>
-                    <p class="text-gray-400 leading-relaxed">Penataan ulang posisi Laba Bersih di bawah grafik, tata letak saldo & form berdampingan erat, grafik ganda terpadu, dan database lokal.</p>
+                    <p class="text-gray-400 leading-relaxed">Penambahan tombol edit nominal/nama dompet secara langsung, layout supermarket berdampingan, dan posisi laba bersih di bawah grafik.</p>
                 </div>
             </div>
         </div>
@@ -270,10 +270,11 @@
     <!-- Modal Tambah Dompet -->
     <div id="walletModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50 p-4">
         <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4">
-            <h3 class="text-lg font-semibold">Tambah Dompet / Bank</h3>
+            <h3 class="text-lg font-semibold" id="walletModalTitle">Tambah Dompet / Bank</h3>
             <form id="walletForm" class="space-y-3">
+                <input type="hidden" id="walletEditId">
                 <input type="text" id="walletNameInput" placeholder="Nama Dompet (cth: SeaBank)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen">
-                <input type="number" id="walletBalanceInput" placeholder="Saldo Awal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen">
+                <input type="number" id="walletBalanceInput" placeholder="Saldo (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeWalletModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl text-sm">Batal</button>
                     <button type="submit" class="flex-1 bg-brandGreen text-darkGray font-bold py-2 rounded-xl text-sm">Simpan</button>
@@ -321,10 +322,10 @@
 
     <!-- Footer -->
     <footer class="text-center py-6 text-xs text-gray-500 border-t border-borderGray mt-auto">
-        DuitkuAkeh Pro &copy; 2026 - Terintegrasi Database Lokal (LocalStorage) 🚀
+        DuitkuAkeh Pro v4.3 &copy; 2026 - Terintegrasi Database Lokal (LocalStorage) 🚀
     </footer>
 
-    <!-- JavaScript Logika Pro v4.2 -->
+    <!-- JavaScript Logika Pro v4.3 -->
     <script>
         document.getElementById('dateInput').valueAsDate = new Date();
 
@@ -400,6 +401,7 @@
                         <p class="${wallet.active ? 'text-brandGreen' : 'text-gray-500'} font-bold">${formatRupiah(wallet.balance)}</p>
                     </div>
                     <div class="flex items-center gap-1">
+                        <button onclick="openEditWalletModal('${wallet.id}')" class="text-[9px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded hover:bg-blue-500/30">Edit</button>
                         <button onclick="toggleWallet('${wallet.id}')" class="text-[9px] bg-borderGray px-1.5 py-0.5 rounded hover:bg-gray-700">${wallet.active ? 'Mati' : 'Aktif'}</button>
                         <button onclick="deleteWallet('${wallet.id}')" class="text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded hover:bg-red-500/30">✕</button>
                     </div>
@@ -657,7 +659,24 @@
             }
         };
 
-        window.openWalletModal = () => document.getElementById('walletModal').classList.replace('hidden', 'flex');
+        window.openWalletModal = () => {
+            document.getElementById('walletEditId').value = '';
+            document.getElementById('walletModalTitle').textContent = 'Tambah Dompet / Bank';
+            document.getElementById('walletForm').reset();
+            document.getElementById('walletModal').classList.replace('hidden', 'flex');
+        };
+
+        window.openEditWalletModal = (id) => {
+            const w = wallets.find(item => item.id === id);
+            if(w) {
+                document.getElementById('walletEditId').value = w.id;
+                document.getElementById('walletNameInput').value = w.name;
+                document.getElementById('walletBalanceInput').value = w.balance;
+                document.getElementById('walletModalTitle').textContent = 'Edit Dompet / Saldo';
+                document.getElementById('walletModal').classList.replace('hidden', 'flex');
+            }
+        };
+
         window.closeWalletModal = () => document.getElementById('walletModal').classList.replace('flex', 'hidden');
 
         window.openExpenseItemModal = () => document.getElementById('expenseItemModal').classList.replace('hidden', 'flex');
@@ -668,8 +687,23 @@
 
         document.getElementById('walletForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            wallets.push({ id: Date.now().toString(), name: document.getElementById('walletNameInput').value, balance: Number(document.getElementById('walletBalanceInput').value), active: true });
-            saveData(); closeWalletModal(); document.getElementById('walletForm').reset(); updateUI();
+            const editId = document.getElementById('walletEditId').value;
+            const name = document.getElementById('walletNameInput').value;
+            const balance = Number(document.getElementById('walletBalanceInput').value);
+
+            if(editId) {
+                // Edit dompet yang ada
+                const w = wallets.find(item => item.id === editId);
+                if(w) {
+                    w.name = name;
+                    w.balance = balance;
+                }
+            } else {
+                // Tambah dompet baru
+                wallets.push({ id: Date.now().toString(), name, balance, active: true });
+            }
+
+            saveData(); closeWalletModal(); updateUI();
         });
 
         document.getElementById('expenseItemForm').addEventListener('submit', (e) => {
