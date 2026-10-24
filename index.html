@@ -136,7 +136,7 @@
 
     <!-- JavaScript Logika (Fixed removeChild error) -->
     <script>
-        const GEMINI_API_KEY = "MASUKKAN_API_KEY_KAMU_DI_SINI"; // Masukkan API Key asli kamu
+        const GEMINI_API_KEY = "AQ.Ab8RN6K5WjUi4YQQmhYwyF0nrmZw3GSlYc8FbHi_mbtHcO-RJg"; // Masukkan API Key asli kamu
 
         let transactions = JSON.parse(localStorage.getItem('duitkuakeh_transactions')) || [];
         let totalInGlobal = 0;
@@ -218,7 +218,7 @@
             const text = inputEl.value.trim();
             if(!text) return;
 
-            if(!GEMINI_API_KEY || GEMINI_API_KEY === "AQ.Ab8RN6K5WjUi4YQQmhYwyF0nrmZw3GSlYc8FbHi_mbtHcO-RJg") {
+            if(!GEMINI_API_KEY || GEMINI_API_KEY === "MASUKKAN_API_KEY_KAMU_DI_SINI") {
                 alert("Mohon masukkan API Key Gemini kamu terlebih dahulu!");
                 return;
             }
