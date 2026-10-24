@@ -134,7 +134,7 @@
         DuitkuAkeh AI &copy; 2026 - 100% Gratis & Open Source 🚀
     </footer>
 
-    <!-- JavaScript Logika & Standard Fetch API -->
+    <!-- JavaScript Logika (Fixed removeChild error) -->
     <script>
         const GEMINI_API_KEY = "MASUKKAN_API_KEY_KAMU_DI_SINI"; // Masukkan API Key asli kamu
 
@@ -239,7 +239,6 @@
             try {
                 const promptText = `Kamu adalah asisten keuangan pribadi bernama DuitkuAkeh. Saldo user saat ini Rp ${totalInGlobal - totalOutGlobal}. Pertanyaan user: "${text}". Jawab dengan ramah, singkat, dan berbahasa Indonesia.`;
 
-                // Menggunakan endpoint v1 gemini-1.5-flash
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -249,7 +248,7 @@
                 });
 
                 const data = await res.json();
-                chatContainer.removeChild(loadingMsg);
+                loadingMsg.remove(); // Aman menggunakan remove() langsung
 
                 if(data.candidates && data.candidates[0].content) {
                     const aiReply = data.candidates[0].content.parts[0].text;
@@ -261,7 +260,7 @@
                     throw new Error(data.error?.message || "Respon API tidak valid");
                 }
             } catch (err) {
-                chatContainer.removeChild(loadingMsg);
+                loadingMsg.remove(); // Aman menggunakan remove() langsung
                 const errorMsg = document.createElement('div');
                 errorMsg.className = "bg-red-500/20 border border-red-500/30 p-3 rounded-xl rounded-tl-none max-w-[85%] text-red-300";
                 errorMsg.textContent = "Gagal memuat AI: " + err.message;
