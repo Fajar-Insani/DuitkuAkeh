@@ -134,9 +134,9 @@
         DuitkuAkeh AI &copy; 2026 - 100% Gratis & Open Source 🚀
     </footer>
 
-    <!-- JavaScript Logika (Fixed removeChild error) -->
+    <!-- JavaScript Logika & v1beta Endpoint Integration -->
     <script>
-        const GEMINI_API_KEY = "AQ.Ab8RN6K5WjUi4YQQmhYwyF0nrmZw3GSlYc8FbHi_mbtHcO-RJg"; // Masukkan API Key asli kamu
+        const GEMINI_API_KEY = "AQ.Ab8RN6IVHbRpt7ILzaImbN96Kut_gVEqOU3YAXyk6I6m_d4wRQ"; 
 
         let transactions = JSON.parse(localStorage.getItem('duitkuakeh_transactions')) || [];
         let totalInGlobal = 0;
@@ -218,11 +218,6 @@
             const text = inputEl.value.trim();
             if(!text) return;
 
-            if(!GEMINI_API_KEY || GEMINI_API_KEY === "MASUKKAN_API_KEY_KAMU_DI_SINI") {
-                alert("Mohon masukkan API Key Gemini kamu terlebih dahulu!");
-                return;
-            }
-
             const userMsg = document.createElement('div');
             userMsg.className = "bg-brandYellow/20 border border-brandYellow/30 p-3 rounded-xl rounded-tr-none ml-auto max-w-[85%] text-gray-200";
             userMsg.textContent = text;
@@ -239,16 +234,20 @@
             try {
                 const promptText = `Kamu adalah asisten keuangan pribadi bernama DuitkuAkeh. Saldo user saat ini Rp ${totalInGlobal - totalOutGlobal}. Pertanyaan user: "${text}". Jawab dengan ramah, singkat, dan berbahasa Indonesia.`;
 
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                // Menggunakan endpoint v1beta dan bearer token untuk mendukung format AQ.
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${GEMINI_API_KEY}`
+                    },
                     body: JSON.stringify({
                         contents: [{ parts: [{ text: promptText }] }]
                     })
                 });
 
                 const data = await res.json();
-                loadingMsg.remove(); // Aman menggunakan remove() langsung
+                loadingMsg.remove();
 
                 if(data.candidates && data.candidates[0].content) {
                     const aiReply = data.candidates[0].content.parts[0].text;
@@ -257,10 +256,10 @@
                     aiMsg.textContent = aiReply;
                     chatContainer.appendChild(aiMsg);
                 } else {
-                    throw new Error(data.error?.message || "Respon API tidak valid");
+                    throw new Error(data.error?.message || "Gagal mendapatkan respons AI");
                 }
             } catch (err) {
-                loadingMsg.remove(); // Aman menggunakan remove() langsung
+                loadingMsg.remove();
                 const errorMsg = document.createElement('div');
                 errorMsg.className = "bg-red-500/20 border border-red-500/30 p-3 rounded-xl rounded-tl-none max-w-[85%] text-red-300";
                 errorMsg.textContent = "Gagal memuat AI: " + err.message;
