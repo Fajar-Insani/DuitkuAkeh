@@ -6,14 +6,6 @@
     <title>DuitkuAkeh - AI Financial Assistant</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Generative AI Official SDK -->
-    <script type="importmap">
-      {
-        "imports": {
-          "@google/genai": "https://esm.run/@google/genai"
-        }
-      }
-    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -142,14 +134,9 @@
         DuitkuAkeh AI &copy; 2026 - 100% Gratis & Open Source 🚀
     </footer>
 
-    <!-- JavaScript Logika & Official Google Gen AI SDK -->
-    <script type="module">
-        import { GoogleGenAI } from "@google/genai";
-
-        // Ganti dengan API Key kamu yang valid
-        const GEMINI_API_KEY = "MASUKKAN_API_KEY_KAMU_DI_SINI"; 
-
-        const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+    <!-- JavaScript Logika & Standard Fetch API -->
+    <script>
+        const GEMINI_API_KEY = "MASUKKAN_API_KEY_KAMU_DI_SINI"; // Masukkan API Key asli kamu
 
         let transactions = JSON.parse(localStorage.getItem('duitkuakeh_transactions')) || [];
         let totalInGlobal = 0;
@@ -198,30 +185,25 @@
             pengeluaranEl.textContent = "- " + formatRupiah(totalOutGlobal);
         };
 
-        // Handle Form Submit Transaksi
         document.getElementById('transactionForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const type = document.getElementById('typeInput').value;
             const amount = document.getElementById('amountInput').value;
             const category = document.getElementById('categoryInput').value;
 
-            const newTx = {
+            transactions.push({
                 type,
                 amount,
                 category,
                 date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
-            };
-
-            transactions.push(newTx);
+            });
             localStorage.setItem('duitkuakeh_transactions', JSON.stringify(transactions));
 
             document.getElementById('amountInput').value = '';
             document.getElementById('categoryInput').value = '';
-
             updateDashboard();
         });
 
-        // Tombol Reset Data
         document.getElementById('resetDataBtn').addEventListener('click', () => {
             if(confirm("Yakin mau mereset semua data riwayat keuangan di DuitkuAkeh?")) {
                 transactions = [];
@@ -230,7 +212,6 @@
             }
         });
 
-        // Fungsi Kirim Pesan menggunakan SDK Resmi Google Gen AI
         document.getElementById('sendChatBtn').addEventListener('click', async () => {
             const inputEl = document.getElementById('chatInput');
             const chatContainer = document.getElementById('chatContainer');
@@ -238,11 +219,10 @@
             if(!text) return;
 
             if(!GEMINI_API_KEY || GEMINI_API_KEY === "AQ.Ab8RN6K5WjUi4YQQmhYwyF0nrmZw3GSlYc8FbHi_mbtHcO-RJg") {
-                alert("Mohon masukkan API Key Gemini kamu terlebih dahulu pada kodingan baris JavaScript!");
+                alert("Mohon masukkan API Key Gemini kamu terlebih dahulu!");
                 return;
             }
 
-            // Tampilkan pesan User ke UI
             const userMsg = document.createElement('div');
             userMsg.className = "bg-brandYellow/20 border border-brandYellow/30 p-3 rounded-xl rounded-tr-none ml-auto max-w-[85%] text-gray-200";
             userMsg.textContent = text;
@@ -250,7 +230,6 @@
             inputEl.value = '';
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            // Indikator Loading AI
             const loadingMsg = document.createElement('div');
             loadingMsg.className = "bg-borderGray/50 p-3 rounded-xl rounded-tl-none max-w-[85%] text-gray-400 italic";
             loadingMsg.textContent = "AI sedang menganalisis dompetmu...";
@@ -258,43 +237,39 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                const contextPrompt = `Kamu adalah asisten keuangan pribadi yang ramah dan bijak di aplikasi DuitkuAkeh. 
-Data keuangan pengguna saat ini:
-- Total Saldo: Rp ${totalInGlobal - totalOutGlobal}
-- Total Pemasukan: Rp ${totalInGlobal}
-- Total Pengeluaran: Rp ${totalOutGlobal}
-- Riwayat Transaksi Terakhir: ${JSON.stringify(transactions.slice(-5))}
+                const promptText = `Kamu adalah asisten keuangan pribadi bernama DuitkuAkeh. Saldo user saat ini Rp ${totalInGlobal - totalOutGlobal}. Pertanyaan user: "${text}". Jawab dengan ramah, singkat, dan berbahasa Indonesia.`;
 
-Pertanyaan pengguna: "${text}"
-Berikan jawaban yang santai, empatik, dan kasih saran finansial yang praktis dalam Bahasa Indonesia.`;
-
-                // Panggilan menggunakan Google Gen AI SDK
-                const response = await ai.models.generateContent({
-                    model: 'gemini-2.5-flash',
-                    contents: contextPrompt,
+                // Menggunakan endpoint v1 gemini-1.5-flash
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptText }] }]
+                    })
                 });
 
+                const data = await res.json();
                 chatContainer.removeChild(loadingMsg);
-                const aiReply = response.text || "Sek Sek, jek ngelu takon o mengko ae tak leren disik!";
 
-                // Tampilkan balasan AI ke UI
-                const aiMsg = document.createElement('div');
-                aiMsg.className = "bg-borderGray/50 p-3 rounded-xl rounded-tl-none max-w-[85%] text-gray-300";
-                aiMsg.textContent = aiReply;
-                chatContainer.appendChild(aiMsg);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            } catch (error) {
-                console.error(error);
+                if(data.candidates && data.candidates[0].content) {
+                    const aiReply = data.candidates[0].content.parts[0].text;
+                    const aiMsg = document.createElement('div');
+                    aiMsg.className = "bg-borderGray/50 p-3 rounded-xl rounded-tl-none max-w-[85%] text-gray-300";
+                    aiMsg.textContent = aiReply;
+                    chatContainer.appendChild(aiMsg);
+                } else {
+                    throw new Error(data.error?.message || "Respon API tidak valid");
+                }
+            } catch (err) {
                 chatContainer.removeChild(loadingMsg);
                 const errorMsg = document.createElement('div');
                 errorMsg.className = "bg-red-500/20 border border-red-500/30 p-3 rounded-xl rounded-tl-none max-w-[85%] text-red-300";
-                errorMsg.textContent = "Yah, koneksi ke AI gagal. Coba cek kembali API Key-mu di konsol browser ya!";
+                errorMsg.textContent = "Gagal memuat AI: " + err.message;
                 chatContainer.appendChild(errorMsg);
             }
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         });
 
-        // Jalankan saat pertama load
         updateDashboard();
     </script>
 </body>
