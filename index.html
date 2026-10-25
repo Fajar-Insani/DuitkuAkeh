@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DuitkuAkeh - Financial Analytics</title>
+    <title>DuitkuAkeh Pro - Financial Analytics</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -25,6 +25,12 @@
         }
     </script>
     <style>
+        /* Mencegah font patah-patah dan membuat teks lebih halus di semua perangkat */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
         .fade-in {
             animation: fadeIn 0.3s ease-in-out forwards;
         }
@@ -33,8 +39,8 @@
             to { opacity: 1; transform: translateY(0); }
         }
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
             background: #121212;
@@ -49,41 +55,43 @@
         }
     </style>
 </head>
-<body class="bg-darkGray text-gray-100 font-sans min-h-screen flex flex-col selection:bg-brandGreen selection:text-darkGray">
+<body class="bg-darkGray text-gray-100 font-sans min-h-screen flex flex-col selection:bg-brandGreen selection:text-darkGray text-sm">
 
     <!-- Header / Navbar -->
-    <header class="bg-cardGray border-b border-borderGray py-3 px-6 sticky top-0 z-50 flex justify-between items-center shadow-lg backdrop-blur-md bg-opacity-95">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl overflow-hidden bg-brandYellow/10 flex items-center justify-center border border-borderGray shadow-inner">
+    <header class="bg-cardGray border-b border-borderGray py-3.5 px-4 md:px-6 sticky top-0 z-50 flex justify-between items-center shadow-lg backdrop-blur-md bg-opacity-95">
+        <div class="flex items-center space-x-2.5">
+            <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl overflow-hidden bg-brandYellow/10 flex items-center justify-center border border-borderGray shadow-inner shrink-0">
                 <img src="andou.webp" alt="Logo Andou" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/40/F59E0B/121212?text=💰';">
             </div>
-            <h1 class="text-xl font-bold tracking-wide">Duitku<span class="text-brandGreen">Akeh</span></h1>
+            <h1 class="text-base md:text-xl font-bold tracking-tight">Duitku<span class="text-brandGreen">Akeh</span></h1>
         </div>
-        <div class="flex items-center gap-2">
-            <button onclick="exportAllData()" class="text-xs bg-borderGray hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-xl border border-gray-700 shadow-sm transition-all flex items-center gap-1">
-                <span>💾</span> Ekspor Semua
+        <div class="flex items-center gap-1.5 md:gap-2">
+            <!-- Tombol Ekspor Universal (Emoji Saja agar Compact di Mobile) -->
+            <button onclick="exportAllData()" title="Ekspor Semua Data" class="w-9 h-9 md:w-auto md:px-3 md:py-1.5 bg-borderGray hover:bg-gray-700 text-gray-200 rounded-xl border border-gray-700 shadow-sm transition-all flex items-center justify-center gap-1 text-xs font-medium">
+                <span>💾</span> <span class="hidden md:inline">Ekspor</span>
             </button>
-            <label class="text-xs bg-borderGray hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-xl border border-gray-700 shadow-sm transition-all flex items-center gap-1 cursor-pointer">
-                <span>📂</span> Impor Semua
+            <!-- Tombol Impor Universal (Emoji Saja) -->
+            <label title="Impor Semua Data" class="w-9 h-9 md:w-auto md:px-3 md:py-1.5 bg-borderGray hover:bg-gray-700 text-gray-200 rounded-xl border border-gray-700 shadow-sm transition-all flex items-center justify-center gap-1 text-xs font-medium cursor-pointer">
+                <span>📂</span> <span class="hidden md:inline">Impor</span>
                 <input type="file" id="importAllFile" accept=".json" onchange="importAllData(event)" class="hidden">
             </label>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6 fade-in">
+    <main class="flex-1 max-w-7xl w-full mx-auto p-3.5 md:p-6 space-y-5 md:space-y-6 fade-in">
 
         <!-- Layout Utama -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-6">
             
             <!-- KOLOM 1: Saldo & Form Input Transaksi -->
-            <div class="space-y-6">
+            <div class="space-y-5 md:space-y-6">
                 
                 <!-- Kartu Saldo Utama -->
-                <div class="bg-gradient-to-r from-cardGray to-borderGray p-6 rounded-2xl border border-borderGray shadow-xl relative overflow-hidden transition-all hover:border-gray-600">
+                <div class="bg-gradient-to-r from-cardGray to-borderGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl relative overflow-hidden transition-all hover:border-gray-600">
                     <div class="absolute right-4 top-4 text-brandYellow/10 text-6xl font-bold select-none pointer-events-none">IDR</div>
                     <p class="text-gray-400 text-xs font-medium">Total Aset Likuid (Modal All-In)</p>
-                    <h2 id="totalSaldo" class="text-3xl font-extrabold text-brandGreen mt-1 tracking-tight">Rp 0</h2>
+                    <h2 id="totalSaldo" class="text-2xl md:text-3xl font-extrabold text-brandGreen mt-1 tracking-tight">Rp 0</h2>
                     <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-borderGray/50 text-xs">
                         <div>
                             <p class="text-gray-400 text-[10px]">Pemasukan</p>
@@ -97,15 +105,15 @@
                 </div>
 
                 <!-- Form Input Transaksi -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl">
-                    <h3 class="text-base font-semibold mb-4 flex items-center gap-2">
+                <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl">
+                    <h3 class="text-sm md:text-base font-semibold mb-3.5 flex items-center gap-2">
                         <span>📝</span> Input Transaksi
                     </h3>
                     <form id="transactionForm" class="space-y-3 text-xs">
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block text-gray-400 mb-1">Tipe</label>
-                                <select id="typeInput" onchange="handleTypeChange()" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">
+                                <select id="typeInput" onchange="handleTypeChange()" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen transition-all text-gray-200">
                                     <option value="Pemasukan">Pemasukan (+)</option>
                                     <option value="Pengeluaran">Pengeluaran (-)</option>
                                     <option value="Utang">Utang 🔴🔵</option>
@@ -114,12 +122,12 @@
                             </div>
                             <div id="walletWrapper">
                                 <label class="block text-gray-400 mb-1" id="sourceLabel">Dompet / Sumber</label>
-                                <select id="walletSourceInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all"></select>
+                                <select id="walletSourceInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen transition-all text-gray-200"></select>
                             </div>
                         </div>
                         <div>
                             <label class="block text-gray-400 mb-1" id="categoryLabel">Kategori Utama</label>
-                            <select id="categorySelect" onchange="handleCategoryChange()" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">
+                            <select id="categorySelect" onchange="handleCategoryChange()" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen transition-all text-gray-200">
                                 <option value="🍔 Makanan & Minuman">🍔 Makanan & Minuman</option>
                                 <option value="🚗 Transportasi">🚗 Transportasi</option>
                                 <option value="🛍️ Belanja">🛍️ Belanja</option>
@@ -131,26 +139,26 @@
                         </div>
                         <div id="detailContainer">
                             <label class="block text-gray-400 mb-1" id="detailLabel">Detail Catatan <span class="text-brandYellow">*Wajib</span></label>
-                            <input type="text" id="detailInput" placeholder="Cth: Nasi Padang Extra Rendang" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">
+                            <input type="text" id="detailInput" placeholder="Cth: Nasi Padang Extra Rendang" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen transition-all text-gray-200">
                         </div>
                         <div>
                             <label class="block text-gray-400 mb-1">Tanggal</label>
-                            <input type="date" id="dateInput" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen text-gray-200 transition-all">
+                            <input type="date" id="dateInput" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-gray-200 transition-all">
                         </div>
                         <div>
                             <label class="block text-gray-400 mb-1">Nominal (Rp)</label>
-                            <input type="number" id="amountInput" placeholder="Contoh: 25000" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">
+                            <input type="number" id="amountInput" placeholder="Contoh: 25000" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-gray-200 transition-all">
                         </div>
-                        <button type="submit" class="w-full bg-brandGreen text-darkGray font-bold py-2.5 rounded-xl hover:bg-brandGreen/90 shadow-md transition-all active:scale-[0.98] mt-1">
+                        <button type="submit" class="w-full bg-brandGreen text-darkGray font-bold py-3 rounded-xl hover:bg-brandGreen/90 shadow-md transition-all active:scale-[0.98] mt-1">
                             Simpan Transaksi
                         </button>
                     </form>
                 </div>
 
                 <!-- Panel Sumber Dana -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl">
+                <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-sm font-semibold flex items-center gap-2">
+                        <h3 class="text-xs md:text-sm font-semibold flex items-center gap-2">
                             <span>💳</span> Sumber Dana
                         </h3>
                         <button onclick="openWalletModal()" class="text-[10px] bg-brandGreen text-darkGray font-bold px-2.5 py-1 rounded-xl shadow hover:opacity-90 transition-all">
@@ -163,11 +171,11 @@
             </div>
 
             <!-- KOLOM 2: Grafik Analisis & Laba Bersih -->
-            <div class="space-y-6">
+            <div class="space-y-5 md:space-y-6">
                 
                 <!-- Grafik Garis -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl flex flex-col">
-                    <h3 class="text-sm font-semibold mb-3 flex items-center gap-2">
+                <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl flex flex-col">
+                    <h3 class="text-xs md:text-sm font-semibold mb-3 flex items-center gap-2">
                         <span>📈</span> Tren Arus Kas
                     </h3>
                     <div class="w-full h-48 flex items-center justify-center">
@@ -176,8 +184,8 @@
                 </div>
 
                 <!-- Grafik Batang -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl flex flex-col">
-                    <h3 class="text-sm font-semibold mb-3 flex items-center gap-2">
+                <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl flex flex-col">
+                    <h3 class="text-xs md:text-sm font-semibold mb-3 flex items-center gap-2">
                         <span>📊</span> Komparasi Kategori Pengeluaran
                     </h3>
                     <div class="w-full h-48 flex items-center justify-center">
@@ -186,10 +194,10 @@
                 </div>
 
                 <!-- Panel Laba Bersih -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl space-y-4">
+                <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
-                            <h3 class="text-sm font-semibold flex items-center gap-2">
+                            <h3 class="text-xs md:text-sm font-semibold flex items-center gap-2">
                                <span>🎛️</span> Analisis Laba Bersih & Jangkauan Waktu
                             </h3>
                             <p class="text-[11px] text-gray-400">Pilih rentang waktu untuk grafik dan laporan laba.</p>
@@ -206,7 +214,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-darkGray p-3.5 rounded-xl border border-borderGray text-xs">
                         <div>
                             <p class="text-gray-400 text-[10px]">Laba Bersih (Periode Ini)</p>
-                            <span id="netProfit" class="text-base font-bold text-brandGreen block mt-0.5">Rp 0</span>
+                            <span id="netProfit" class="text-sm md:text-base font-bold text-brandGreen block mt-0.5">Rp 0</span>
                         </div>
                         <div>
                             <div class="flex justify-between items-center mb-1">
@@ -221,12 +229,12 @@
             </div>
 
             <!-- KOLOM 3: Notepad Utang/Piutang, Celengan, & Riwayat -->
-            <div class="space-y-6 flex flex-col">
+            <div class="space-y-5 md:space-y-6 flex flex-col">
                 
                 <!-- Notepad Utang & Piutang Khusus -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl space-y-3">
+                <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-sm font-semibold flex items-center gap-2">
+                        <h3 class="text-xs md:text-sm font-semibold flex items-center gap-2">
                             <span>📒</span> Notepad Utang & Piutang
                         </h3>
                         <span class="text-[10px] bg-borderGray px-2 py-0.5 rounded text-gray-400">Live Status</span>
@@ -237,9 +245,9 @@
                 </div>
 
                 <!-- Celengan Impian -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl">
+                <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-sm font-semibold flex items-center gap-2">
+                        <h3 class="text-xs md:text-sm font-semibold flex items-center gap-2">
                             <span>🎯</span> Celengan Impian
                         </h3>
                         <button onclick="openGoalModal()" class="text-[10px] bg-brandYellow text-darkGray font-bold px-2.5 py-1 rounded-xl shadow hover:opacity-90 transition-all">
@@ -250,36 +258,36 @@
                 </div>
 
                 <!-- Riwayat Transaksi -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl flex-1 flex flex-col h-[400px]">
+                <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl flex-1 flex flex-col h-[400px]">
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="text-sm font-semibold flex items-center gap-2">
+                        <h3 class="text-xs md:text-sm font-semibold flex items-center gap-2">
                             <span>📜</span> Riwayat Terpadu
                         </h3>
-                        <div class="flex items-center gap-1.5">
-                            <!-- Tombol Ekspor Khusus Riwayat -->
-                            <button onclick="exportTransactionsOnly()" title="Ekspor Riwayat Saja" class="text-[10px] bg-borderGray hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded transition-all">
-                                📤 Ekspor
+                        <div class="flex items-center gap-1">
+                            <!-- Tombol Ekspor Khusus Riwayat (Emoji Ringkas) -->
+                            <button onclick="exportTransactionsOnly()" title="Ekspor Riwayat" class="w-7 h-7 bg-borderGray hover:bg-gray-700 text-gray-300 rounded-lg flex items-center justify-center text-xs transition-all">
+                                📤
                             </button>
                             <!-- Tombol Impor Khusus Riwayat -->
-                            <label title="Impor Riwayat Saja" class="text-[10px] bg-borderGray hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded transition-all cursor-pointer">
-                                📥 Impor
+                            <label title="Impor Riwayat" class="w-7 h-7 bg-borderGray hover:bg-gray-700 text-gray-300 rounded-lg flex items-center justify-center text-xs transition-all cursor-pointer">
+                                📥
                                 <input type="file" id="importTxFile" accept=".json" onchange="importTransactionsOnly(event)" class="hidden">
                             </label>
-                            <button id="resetDataBtn" class="text-[10px] text-red-400 hover:text-red-300 bg-borderGray px-2 py-0.5 rounded transition-all">
-                                Reset All
+                            <button id="resetDataBtn" title="Reset Semua" class="w-7 h-7 bg-borderGray hover:bg-gray-700 text-red-400 rounded-lg flex items-center justify-center text-xs transition-all">
+                                🗑️
                             </button>
                         </div>
                     </div>
                     
                     <div class="grid grid-cols-2 gap-2 mb-2">
-                        <select id="historyTimeFilter" onchange="renderTransactions()" class="bg-darkGray border border-borderGray rounded-xl px-2 py-1 text-[11px] focus:outline-none focus:border-brandGreen text-gray-300 transition-all">
+                        <select id="historyTimeFilter" onchange="renderTransactions()" class="bg-darkGray border border-borderGray rounded-xl px-2.5 py-1.5 text-[11px] focus:outline-none focus:border-brandGreen text-gray-300 transition-all">
                             <option value="all">Semua Waktu</option>
                             <option value="year">Tahun Ini</option>
                             <option value="month" selected>Bulan Ini</option>
                             <option value="week">Minggu Ini</option>
                             <option value="day">Hari Ini</option>
                         </select>
-                        <select id="historyCategoryFilter" onchange="renderTransactions()" class="bg-darkGray border border-borderGray rounded-xl px-2 py-1 text-[11px] focus:outline-none focus:border-brandGreen text-gray-300 transition-all">
+                        <select id="historyCategoryFilter" onchange="renderTransactions()" class="bg-darkGray border border-borderGray rounded-xl px-2.5 py-1.5 text-[11px] focus:outline-none focus:border-brandGreen text-gray-300 transition-all">
                             <option value="ALL">Kategori: All</option>
                             <option value="CUSTOM_ONLY">Kategori: Lainnya</option>
                         </select>
@@ -296,27 +304,27 @@
         </div>
 
         <!-- Slot Kenangan & Riwayat Update -->
-        <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl space-y-4">
+        <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl space-y-4">
             <div class="flex justify-between items-center border-b border-borderGray pb-3">
-                <h3 class="text-base font-semibold flex items-center gap-2 text-brandYellow">
-                    <span></span>Riwayat Update DuitkuAkeh
+                <h3 class="text-sm md:text-base font-semibold flex items-center gap-2 text-brandYellow">
+                    <span>📜✨</span> Slot Kenangan & Riwayat Update DuitkuAkeh
                 </h3>
                 <span class="text-xs text-gray-400">Jejak Pembuatan & Versi</span>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                 <div class="bg-darkGray p-4 rounded-xl border border-borderGray space-y-2">
                     <div class="flex justify-between items-center font-semibold text-gray-200">
-                        <span>Versi 1.0 - 5.2 (Inisiasi)</span>
+                        <span>Versi 1.0 - 5.3 (Inisiasi)</span>
                         <span class="text-brandGreen">April - Okt 2026</span>
                     </div>
                     <p class="text-gray-400 leading-relaxed">Multi-dompet, grafik Chart.js, celengan impian, notepad utang/piutang, hingga pelunasan bertahap.</p>
                 </div>
                 <div class="bg-darkGray p-4 rounded-xl border border-borderGray space-y-2">
                     <div class="flex justify-between items-center font-semibold text-gray-200">
-                        <span>Versi 5.3 Pro (Clean UI & History Export)</span>
+                        <span>Versi 5.4 Pro (Mobile Optimized UI)</span>
                         <span class="text-blue-400">Terbaru</span>
                     </div>
-                    <p class="text-gray-400 leading-relaxed">Penyempurnaan visibilitas dompet (sembunyi sempurna saat catat utang/piutang baru, muncul saat pembayaran), serta fitur Ekspor/Impor khusus riwayat transaksi.</p>
+                    <p class="text-gray-400 leading-relaxed">Penyempurnaan total tampilan mobile (header aman tidak mentok, tombol header ringkas berbasis emoji, serta font antarmuka yang bersih, tajam, dan elegan di HP maupun laptop).</p>
                 </div>
                 <div class="bg-darkGray p-4 rounded-xl border border-borderGray space-y-2">
                     <div class="flex justify-between items-center font-semibold text-gray-200">
@@ -336,8 +344,8 @@
             <h3 class="text-lg font-semibold" id="walletModalTitle">Tambah Dompet / Bank</h3>
             <form id="walletForm" class="space-y-3">
                 <input type="hidden" id="walletEditId">
-                <input type="text" id="walletNameInput" placeholder="Nama Dompet (cth: SeaBank)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all">
-                <input type="number" id="walletBalanceInput" placeholder="Saldo Awal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all">
+                <input type="text" id="walletNameInput" placeholder="Nama Dompet (cth: SeaBank)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
+                <input type="number" id="walletBalanceInput" placeholder="Saldo Awal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeWalletModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl text-sm transition-all hover:bg-gray-700">Batal</button>
                     <button type="submit" class="flex-1 bg-brandGreen text-darkGray font-bold py-2 rounded-xl text-sm transition-all hover:opacity-90">Simpan</button>
@@ -351,9 +359,9 @@
         <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl fade-in">
             <h3 class="text-lg font-semibold">Kelola Beban Rutin</h3>
             <form id="expenseItemForm" class="space-y-3 text-xs">
-                <input type="text" id="expenseItemName" placeholder="Nama Beban (cth: Internet WiFi)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all">
-                <input type="number" id="expenseItemCost" placeholder="Estimasi Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all">
-                <select id="expenseItemFreq" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all">
+                <input type="text" id="expenseItemName" placeholder="Nama Beban (cth: Internet WiFi)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all text-gray-200">
+                <input type="number" id="expenseItemCost" placeholder="Estimasi Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all text-gray-200">
+                <select id="expenseItemFreq" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all text-gray-200">
                     <option value="month">Per Bulan</option>
                     <option value="year">Per Tahun</option>
                     <option value="week">Per Minggu</option>
@@ -372,9 +380,9 @@
         <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl fade-in">
             <h3 class="text-lg font-semibold">Buat Target Celengan</h3>
             <form id="goalForm" class="space-y-3 text-xs">
-                <input type="text" id="goalNameInput" placeholder="Nama Impian (cth: Helm Baru)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all">
-                <input type="number" id="goalTargetInput" placeholder="Target Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all">
-                <input type="number" id="goalCurrentInput" placeholder="Terkumpul Saat Ini (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all">
+                <input type="text" id="goalNameInput" placeholder="Nama Impian (cth: Helm Baru)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
+                <input type="number" id="goalTargetInput" placeholder="Target Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
+                <input type="number" id="goalCurrentInput" placeholder="Terkumpul Saat Ini (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeGoalModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl transition-all hover:bg-gray-700">Batal</button>
                     <button type="submit" class="flex-1 bg-brandYellow text-darkGray font-bold py-2 rounded-xl transition-all hover:opacity-90">Simpan</button>
@@ -385,10 +393,10 @@
 
     <!-- Footer -->
     <footer class="text-center py-6 text-xs text-gray-500 border-t border-borderGray mt-auto">
-        DuitkuAkeh v5.3 &copy; 2026 - Terintegrasi Database Lokal (LocalStorage) 🚀
+        DuitkuAkeh Pro v5.4 &copy; 2026 - Terintegrasi Database Lokal (LocalStorage) 🚀
     </footer>
 
-    <!-- JavaScript Logika Pro v5.3 -->
+    <!-- JavaScript Logika Pro v5.4 -->
     <script>
         document.getElementById('dateInput').valueAsDate = new Date();
 
@@ -424,7 +432,7 @@
 
         // Ekspor & Impor Semua Data
         window.exportAllData = () => {
-            const dataObj = { wallets, transactions, goals, expenseItems, debts, version: "5.3", date: new Date().toISOString() };
+            const dataObj = { wallets, transactions, goals, expenseItems, debts, version: "5.4", date: new Date().toISOString() };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
@@ -460,7 +468,7 @@
 
         // Ekspor & Impor Khusus Riwayat Transaksi Saja
         window.exportTransactionsOnly = () => {
-            const dataObj = { transactions, version: "5.3-tx", date: new Date().toISOString() };
+            const dataObj = { transactions, version: "5.4-tx", date: new Date().toISOString() };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
@@ -478,8 +486,7 @@
                 try {
                     const imported = JSON.parse(e.target.result);
                     if (imported.transactions && Array.isArray(imported.transactions)) {
-                        if (confirm(`Impor ${imported.transactions.length} riwayat transaksi? Data riwayat yang ada akan digabungkan atau ditimpa.`)) {
-                            // Gabungkan atau ganti (di sini kita timpa/ganti dengan data riwayat file)
+                        if (confirm(`Impor ${imported.transactions.length} riwayat transaksi?`)) {
                             transactions = imported.transactions;
                             saveData();
                             updateUI();
@@ -557,14 +564,13 @@
 
             if (type === 'Utang' || type === 'Piutang') {
                 if (categorySelect === 'Debit (-)' || categorySelect === 'Kredit (-)') {
-                    // Saat Pembayaran / Pelunasan -> Tampilkan Kotak Dompet
                     walletWrapper.style.display = 'block'; 
                     detailLabel.innerHTML = `Pilih ${type} yang Dilunasi dari Notepad`;
                     let activeDebts = debts.filter(d => d.type === type && d.status !== 'Lunas');
                     if (activeDebts.length === 0) {
-                        detailInput.outerHTML = `<select id="detailInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all"><option value="">Belum ada data ${type} aktif di notepad!</option></select>`;
+                        detailInput.outerHTML = `<select id="detailInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen transition-all text-gray-200"><option value="">Belum ada data ${type} aktif di notepad!</option></select>`;
                     } else {
-                        let optionsHtml = `<select id="detailInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">`;
+                        let optionsHtml = `<select id="detailInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen transition-all text-gray-200">`;
                         activeDebts.forEach(d => {
                             optionsHtml += `<option value="${d.detail}">${d.detail} (Sisa: ${formatRupiah(d.amount)})</option>`;
                         });
@@ -572,12 +578,11 @@
                         detailInput.outerHTML = optionsHtml;
                     }
                 } else {
-                    // Saat Catat Utang/Piutang Baru (Kredit+ / Debit+) -> SEMBUNYIKAN KOTAK DOMPET SEMPURNA
                     walletWrapper.style.display = 'none'; 
-                    detailLabel.innerHTML = `Nama Pihak / Pemberi (Jika sudah ada, otomatis akumulasi) <span class="text-brandYellow">*Wajib</span>`;
+                    detailLabel.innerHTML = `Nama Pihak / Pemberi (Akumulasi otomatis) <span class="text-brandYellow">*Wajib</span>`;
                     let currentEl = document.getElementById('detailInput');
                     if(currentEl.tagName !== 'INPUT') {
-                        currentEl.outerHTML = `<input type="text" id="detailInput" placeholder="Cth: A / Budi" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">`;
+                        currentEl.outerHTML = `<input type="text" id="detailInput" placeholder="Cth: A / Budi" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen transition-all text-gray-200">`;
                     } else {
                         currentEl.placeholder = "Cth: A / Budi";
                     }
@@ -586,14 +591,14 @@
                 walletWrapper.style.display = 'block';
                 let currentEl = document.getElementById('detailInput');
                 if(currentEl.tagName !== 'INPUT') {
-                    currentEl.outerHTML = `<input type="text" id="detailInput" placeholder="Cth: Es Jeruk" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">`;
+                    currentEl.outerHTML = `<input type="text" id="detailInput" placeholder="Cth: Nasi Padang Extra Rendang" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen transition-all text-gray-200">`;
                 }
                 if (categorySelect === "📦 Lainnya") {
-                    detailLabel.innerHTML = `Keterangan Bebas <span class="text-brandYellow">*Wajib (Cth: Nemu Duit)</span>`;
+                    detailLabel.innerHTML = `Keterangan Bebas <span class="text-brandYellow">*Wajib</span>`;
                     document.getElementById('detailInput').placeholder = "Cth: Nemu Duit di Jalan";
                 } else {
                     detailLabel.innerHTML = `Detail Catatan <span class="text-brandYellow">*Wajib</span>`;
-                    document.getElementById('detailInput').placeholder = "Cth: Bensin";
+                    document.getElementById('detailInput').placeholder = "Cth: Nasi Padang";
                 }
             }
         };
@@ -669,7 +674,7 @@
             if (activeWallets.length === 0) {
                 const opt = document.createElement('option');
                 opt.value = "";
-                opt.textContent = "Buat dompet dulu di bawah!";
+                opt.textContent = "Buat dompet dulu!";
                 selectEl.appendChild(opt);
                 return;
             }
@@ -720,7 +725,7 @@
                     </div>
                     <div class="flex items-center gap-1.5">
                         <button onclick="preparePayDebt(${index})" class="text-[10px] px-2 py-1 rounded font-bold transition-all ${isPaid ? 'bg-borderGray text-gray-400 cursor-not-allowed' : 'bg-brandBlue/20 text-brandBlue hover:bg-brandBlue/30'}" ${isPaid ? 'disabled' : ''}>
-                            Bayar / Lunas
+                            Bayar
                         </button>
                         <button onclick="deleteDebt(${index})" class="text-[10px] bg-red-500/20 text-red-400 px-1.5 py-1 rounded hover:bg-red-500/30 transition-all">✕</button>
                     </div>
@@ -782,7 +787,7 @@
                 itemDiv.className = "bg-darkGray p-2.5 rounded-xl border border-borderGray flex justify-between items-center transition-all hover:border-gray-600";
                 itemDiv.innerHTML = `
                     <div class="flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full ${dotColorClass} inline-block"></span>
+                        <span class="w-2.5 h-2.5 rounded-full ${dotColorClass} inline-block shrink-0"></span>
                         <div>
                             <p class="font-medium text-gray-200">[${tx.type}] ${tx.category} ${tx.detail ? '• <span class="text-gray-400 italic">"' + tx.detail + '"</span>' : ''}</p>
                             <p class="text-[10px] text-gray-400">${wallet ? wallet.name : 'Notepad Catatan'} • ${tx.date}</p>
@@ -873,7 +878,7 @@
             
             const netEl = document.getElementById('netProfit');
             netEl.textContent = formatRupiah(netProfit);
-            netEl.className = `text-base font-bold ${netProfit >= 0 ? 'text-brandGreen' : 'text-brandYellow'}`;
+            netEl.className = `text-sm md:text-base font-bold ${netProfit >= 0 ? 'text-brandGreen' : 'text-brandYellow'}`;
         };
 
         const updateTopTier = () => {
@@ -888,9 +893,6 @@
                     if(!maxExpense || Number(tx.amount) > Number(maxExpense.amount)) maxExpense = tx;
                 }
             });
-
-            document.getElementById('topIncome').textContent = maxIncome ? `${maxIncome.detail || maxIncome.category} (${formatRupiah(maxIncome.amount)})` : 'Belum ada';
-            document.getElementById('topExpense').textContent = maxExpense ? `${maxExpense.detail || maxExpense.category} (${formatRupiah(maxExpense.amount)})` : 'Belum ada';
         };
 
         const updateCharts = () => {
@@ -1066,12 +1068,12 @@
                     let existingDebt = debts.find(d => d.type === type && d.detail.toLowerCase() === detail.toLowerCase());
                     
                     if (existingDebt) {
-                        let action = confirm(`Catatan "${detail}" sudah ada di notepad dengan sisa ${formatRupiah(existingDebt.amount)}.\n\nKlik OK untuk MENAMBAH nominal utangnya, atau Batal jika ingin membuat catatan baru dengan nama persis.`);
+                        let action = confirm(`Catatan "${detail}" sudah ada di notepad dengan sisa ${formatRupiah(existingDebt.amount)}.\n\nKlik OK untuk MENAMBAH nominal utangnya, atau Batal jika ingin membuat catatan baru.`);
                         if (action) {
                             existingDebt.amount += amount;
                             existingDebt.status = 'Belum Lunas';
                         } else {
-                            let uniqueDetail = prompt("Masukkan nama pembeda (misal: " + detail + " (2)):", detail + " Baru");
+                            let uniqueDetail = prompt("Masukkan nama pembeda:", detail + " Baru");
                             if (!uniqueDetail) return;
                             debts.push({ type, detail: uniqueDetail, amount, status: 'Belum Lunas', date: dateFormatted });
                             detail = uniqueDetail;
