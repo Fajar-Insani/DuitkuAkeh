@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DuitkuAkeh Pro - Financial Analytics</title>
+    <title>DuitkuAkeh - Financial Analytics</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
@@ -19,27 +18,60 @@
                         borderGray: '#2C2C2C',
                         brandGreen: '#10B981',
                         brandYellow: '#F59E0B',
+                        brandBlue: '#3B82F6',
                     }
                 }
             }
         }
     </script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2C2C2C;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3F3F46;
+        }
+    </style>
 </head>
-<body class="bg-darkGray text-gray-100 font-sans min-h-screen flex flex-col">
+<body class="bg-darkGray text-gray-100 font-sans min-h-screen flex flex-col selection:bg-brandGreen selection:text-darkGray">
 
     <!-- Header / Navbar -->
-    <header class="bg-cardGray border-b border-borderGray py-4 px-6 sticky top-0 z-50 flex justify-between items-center shadow-md">
+    <header class="bg-cardGray border-b border-borderGray py-3 px-6 sticky top-0 z-50 flex justify-between items-center shadow-lg backdrop-blur-md bg-opacity-95">
         <div class="flex items-center space-x-3">
-            <div class="bg-brandYellow p-2 rounded-xl text-darkGray font-bold">Rp</div>
-            <h1 class="text-xl font-bold tracking-wide">Duitku<span class="text-brandGreen">Akeh</span> Pro</h1>
+            <div class="w-10 h-10 rounded-xl overflow-hidden bg-brandYellow/10 flex items-center justify-center border border-borderGray shadow-inner">
+                <img src="andou.webp" alt="Logo Andou" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/40/F59E0B/121212?text=💰';">
+            </div>
+            <h1 class="text-xl font-bold tracking-wide">Duitku<span class="text-brandGreen">Akeh</span></h1>
         </div>
-        <div class="text-xs md:text-sm bg-borderGray px-3 py-1.5 rounded-full text-gray-300">
-            Halo, Pejuang Rupiah! ✨
+        <div class="flex items-center gap-2">
+            <button onclick="exportAllData()" class="text-xs bg-borderGray hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-xl border border-gray-700 shadow-sm transition-all flex items-center gap-1">
+                <span>💾</span> Ekspor Semua
+            </button>
+            <label class="text-xs bg-borderGray hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-xl border border-gray-700 shadow-sm transition-all flex items-center gap-1 cursor-pointer">
+                <span>📂</span> Impor Semua
+                <input type="file" id="importAllFile" accept=".json" onchange="importAllData(event)" class="hidden">
+            </label>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6 fade-in">
 
         <!-- Layout Utama -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -47,11 +79,11 @@
             <!-- KOLOM 1: Saldo & Form Input Transaksi -->
             <div class="space-y-6">
                 
-                <!-- Kartu Saldo Utama (Modal All-In) -->
-                <div class="bg-gradient-to-r from-cardGray to-borderGray p-6 rounded-2xl border border-borderGray shadow-lg relative overflow-hidden">
-                    <div class="absolute right-4 top-4 text-brandYellow/10 text-6xl font-bold select-none">IDR</div>
-                    <p class="text-gray-400 text-xs">Total Aset Likuid (Modal All-In)</p>
-                    <h2 id="totalSaldo" class="text-3xl font-extrabold text-brandGreen mt-1">Rp 0</h2>
+                <!-- Kartu Saldo Utama -->
+                <div class="bg-gradient-to-r from-cardGray to-borderGray p-6 rounded-2xl border border-borderGray shadow-xl relative overflow-hidden transition-all hover:border-gray-600">
+                    <div class="absolute right-4 top-4 text-brandYellow/10 text-6xl font-bold select-none pointer-events-none">IDR</div>
+                    <p class="text-gray-400 text-xs font-medium">Total Aset Likuid (Modal All-In)</p>
+                    <h2 id="totalSaldo" class="text-3xl font-extrabold text-brandGreen mt-1 tracking-tight">Rp 0</h2>
                     <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-borderGray/50 text-xs">
                         <div>
                             <p class="text-gray-400 text-[10px]">Pemasukan</p>
@@ -64,57 +96,64 @@
                     </div>
                 </div>
 
-                <!-- Form Catat Transaksi Cepat -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg">
+                <!-- Form Input Transaksi -->
+                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl">
                     <h3 class="text-base font-semibold mb-4 flex items-center gap-2">
-                        <span>📝</span> Catat Transaksi Cepat
+                        <span>📝</span> Input Transaksi
                     </h3>
                     <form id="transactionForm" class="space-y-3 text-xs">
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block text-gray-400 mb-1">Tipe</label>
-                                <select id="typeInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen">
+                                <select id="typeInput" onchange="handleTypeChange()" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">
                                     <option value="Pemasukan">Pemasukan (+)</option>
                                     <option value="Pengeluaran">Pengeluaran (-)</option>
+                                    <option value="Utang">Utang 🔴🔵</option>
+                                    <option value="Piutang">Piutang 🔵🔴</option>
                                 </select>
                             </div>
-                            <div>
-                                <label class="block text-gray-400 mb-1">Dompet</label>
-                                <select id="walletSourceInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen"></select>
+                            <div id="walletWrapper">
+                                <label class="block text-gray-400 mb-1" id="sourceLabel">Dompet / Sumber</label>
+                                <select id="walletSourceInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all"></select>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-gray-400 mb-1">Kategori</label>
-                            <select id="categoryInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen">
+                            <label class="block text-gray-400 mb-1" id="categoryLabel">Kategori Utama</label>
+                            <select id="categorySelect" onchange="handleCategoryChange()" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">
                                 <option value="🍔 Makanan & Minuman">🍔 Makanan & Minuman</option>
                                 <option value="🚗 Transportasi">🚗 Transportasi</option>
                                 <option value="🛍️ Belanja">🛍️ Belanja</option>
                                 <option value="⚡ Tagihan & Beban">⚡ Tagihan & Beban</option>
                                 <option value="🎮 Hiburan">🎮 Hiburan</option>
                                 <option value="💰 Gaji / Pendapatan">💰 Gaji / Pendapatan</option>
+                                <option value="📦 Lainnya">📦 Lainnya (Bebas Ketik)</option>
                             </select>
+                        </div>
+                        <div id="detailContainer">
+                            <label class="block text-gray-400 mb-1" id="detailLabel">Detail Catatan <span class="text-brandYellow">*Wajib</span></label>
+                            <input type="text" id="detailInput" placeholder="Cth: Nasi Padang Extra Rendang" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">
                         </div>
                         <div>
                             <label class="block text-gray-400 mb-1">Tanggal</label>
-                            <input type="date" id="dateInput" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen text-gray-200">
+                            <input type="date" id="dateInput" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen text-gray-200 transition-all">
                         </div>
                         <div>
                             <label class="block text-gray-400 mb-1">Nominal (Rp)</label>
-                            <input type="number" id="amountInput" placeholder="Contoh: 25000" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen">
+                            <input type="number" id="amountInput" placeholder="Contoh: 25000" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">
                         </div>
-                        <button type="submit" class="w-full bg-brandGreen text-darkGray font-bold py-2.5 rounded-xl hover:bg-brandGreen/90 shadow-md mt-1">
+                        <button type="submit" class="w-full bg-brandGreen text-darkGray font-bold py-2.5 rounded-xl hover:bg-brandGreen/90 shadow-md transition-all active:scale-[0.98] mt-1">
                             Simpan Transaksi
                         </button>
                     </form>
                 </div>
 
-                <!-- Panel Sumber Dana (Dilengkapi Tombol Edit Saldo) -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg">
+                <!-- Panel Sumber Dana -->
+                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="text-sm font-semibold flex items-center gap-2">
                             <span>💳</span> Sumber Dana
                         </h3>
-                        <button onclick="openWalletModal()" class="text-[10px] bg-brandGreen text-darkGray font-bold px-2.5 py-1 rounded-xl">
+                        <button onclick="openWalletModal()" class="text-[10px] bg-brandGreen text-darkGray font-bold px-2.5 py-1 rounded-xl shadow hover:opacity-90 transition-all">
                             + Dompet
                         </button>
                     </div>
@@ -123,11 +162,11 @@
 
             </div>
 
-            <!-- KOLOM 2: Grafik Analisis & Laba Bersih di Bawah -->
+            <!-- KOLOM 2: Grafik Analisis & Laba Bersih -->
             <div class="space-y-6">
                 
-                <!-- Grafik Garis (Tren Arus Kas) -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg flex flex-col">
+                <!-- Grafik Garis -->
+                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl flex flex-col">
                     <h3 class="text-sm font-semibold mb-3 flex items-center gap-2">
                         <span>📈</span> Tren Arus Kas
                     </h3>
@@ -136,26 +175,26 @@
                     </div>
                 </div>
 
-                <!-- Grafik Batang (Komparasi Kategori) -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg flex flex-col">
+                <!-- Grafik Batang -->
+                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl flex flex-col">
                     <h3 class="text-sm font-semibold mb-3 flex items-center gap-2">
-                        <span>📊</span> Komparasi Kategori
+                        <span>📊</span> Komparasi Kategori Pengeluaran
                     </h3>
                     <div class="w-full h-48 flex items-center justify-center">
                         <canvas id="categoryBarChart"></canvas>
                     </div>
                 </div>
 
-                <!-- PANEL LABA BERSIH & FILTER WAKTU (Di Bawah Grafik) -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg space-y-4">
+                <!-- Panel Laba Bersih -->
+                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
                             <h3 class="text-sm font-semibold flex items-center gap-2">
                                <span>🎛️</span> Analisis Laba Bersih & Jangkauan Waktu
                             </h3>
-                            <p class="text-[11px] text-gray-400">Pilih rentang waktu untuk laporan laba bersih.</p>
+                            <p class="text-[11px] text-gray-400">Pilih rentang waktu untuk grafik dan laporan laba.</p>
                         </div>
-                        <select id="timeRangeFilter" onchange="updateUI()" class="bg-darkGray border border-borderGray rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-brandGreen text-gray-200">
+                        <select id="timeRangeFilter" onchange="updateUI()" class="bg-darkGray border border-borderGray rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-brandGreen text-gray-200 transition-all">
                             <option value="all">Semua Masa</option>
                             <option value="year">Tahun Ini</option>
                             <option value="month" selected>Bulan Ini</option>
@@ -172,7 +211,7 @@
                         <div>
                             <div class="flex justify-between items-center mb-1">
                                 <span class="text-gray-400 text-[10px]">Beban Rutin</span>
-                                <button onclick="openExpenseItemModal()" class="text-[9px] bg-brandYellow text-darkGray font-bold px-1.5 py-0.5 rounded">+ Beban</button>
+                                <button onclick="openExpenseItemModal()" class="text-[9px] bg-brandYellow text-darkGray font-bold px-1.5 py-0.5 rounded shadow">+ Beban</button>
                             </div>
                             <div id="expenseItemsSummary" class="space-y-1 max-h-20 overflow-y-auto pr-1 text-[11px]"></div>
                         </div>
@@ -181,33 +220,29 @@
 
             </div>
 
-            <!-- KOLOM 3: Top Tier, Celengan, & Riwayat -->
+            <!-- KOLOM 3: Notepad Utang/Piutang, Celengan, & Riwayat -->
             <div class="space-y-6 flex flex-col">
                 
-                <!-- Top Tier Transaksi -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg space-y-3">
-                    <h3 class="text-sm font-semibold flex items-center gap-2">
-                        <span>🏆</span> Top Tier Transaksi
-                    </h3>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <div class="bg-darkGray p-2.5 rounded-xl border border-borderGray">
-                            <p class="text-gray-400 text-[10px]">Pemasukan Tertinggi</p>
-                            <p id="topIncome" class="font-bold text-brandGreen truncate mt-0.5">-</p>
-                        </div>
-                        <div class="bg-darkGray p-2.5 rounded-xl border border-borderGray">
-                            <p class="text-gray-400 text-[10px]">Pengeluaran Terbesar</p>
-                            <p id="topExpense" class="font-bold text-yellow-400 truncate mt-0.5">-</p>
-                        </div>
+                <!-- Notepad Utang & Piutang Khusus -->
+                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-semibold flex items-center gap-2">
+                            <span>📒</span> Notepad Utang & Piutang
+                        </h3>
+                        <span class="text-[10px] bg-borderGray px-2 py-0.5 rounded text-gray-400">Live Status</span>
+                    </div>
+                    <div id="debtNotepadList" class="space-y-2 max-h-44 overflow-y-auto pr-1 text-xs">
+                        <p class="text-gray-500 text-center py-3">Belum ada catatan utang/piutang.</p>
                     </div>
                 </div>
 
                 <!-- Celengan Impian -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg">
+                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl">
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="text-sm font-semibold flex items-center gap-2">
                             <span>🎯</span> Celengan Impian
                         </h3>
-                        <button onclick="openGoalModal()" class="text-[10px] bg-brandYellow text-darkGray font-bold px-2.5 py-1 rounded-xl">
+                        <button onclick="openGoalModal()" class="text-[10px] bg-brandYellow text-darkGray font-bold px-2.5 py-1 rounded-xl shadow hover:opacity-90 transition-all">
                             + Target
                         </button>
                     </div>
@@ -215,17 +250,44 @@
                 </div>
 
                 <!-- Riwayat Transaksi -->
-                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg flex-1 flex flex-col h-[320px]">
-                    <div class="flex justify-between items-center mb-3">
+                <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl flex-1 flex flex-col h-[400px]">
+                    <div class="flex justify-between items-center mb-2">
                         <h3 class="text-sm font-semibold flex items-center gap-2">
                             <span>📜</span> Riwayat Terpadu
                         </h3>
-                        <button id="resetDataBtn" class="text-[10px] text-red-400 hover:text-red-300 bg-borderGray px-2 py-0.5 rounded">
-                            Reset All
-                        </button>
+                        <div class="flex items-center gap-1.5">
+                            <!-- Tombol Ekspor Khusus Riwayat -->
+                            <button onclick="exportTransactionsOnly()" title="Ekspor Riwayat Saja" class="text-[10px] bg-borderGray hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded transition-all">
+                                📤 Ekspor
+                            </button>
+                            <!-- Tombol Impor Khusus Riwayat -->
+                            <label title="Impor Riwayat Saja" class="text-[10px] bg-borderGray hover:bg-gray-700 text-gray-300 px-2 py-0.5 rounded transition-all cursor-pointer">
+                                📥 Impor
+                                <input type="file" id="importTxFile" accept=".json" onchange="importTransactionsOnly(event)" class="hidden">
+                            </label>
+                            <button id="resetDataBtn" class="text-[10px] text-red-400 hover:text-red-300 bg-borderGray px-2 py-0.5 rounded transition-all">
+                                Reset All
+                            </button>
+                        </div>
                     </div>
-                    <div id="transactionList" class="flex-1 bg-darkGray border border-borderGray rounded-xl p-2.5 overflow-y-auto space-y-2 text-xs">
-                        <p class="text-gray-500 text-center py-4">Belum ada transaksi.</p>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-2">
+                        <select id="historyTimeFilter" onchange="renderTransactions()" class="bg-darkGray border border-borderGray rounded-xl px-2 py-1 text-[11px] focus:outline-none focus:border-brandGreen text-gray-300 transition-all">
+                            <option value="all">Semua Waktu</option>
+                            <option value="year">Tahun Ini</option>
+                            <option value="month" selected>Bulan Ini</option>
+                            <option value="week">Minggu Ini</option>
+                            <option value="day">Hari Ini</option>
+                        </select>
+                        <select id="historyCategoryFilter" onchange="renderTransactions()" class="bg-darkGray border border-borderGray rounded-xl px-2 py-1 text-[11px] focus:outline-none focus:border-brandGreen text-gray-300 transition-all">
+                            <option value="ALL">Kategori: All</option>
+                            <option value="CUSTOM_ONLY">Kategori: Lainnya</option>
+                        </select>
+                    </div>
+
+                    <!-- Kotak Riwayat Diberi Scroll Vertikal -->
+                    <div id="transactionList" class="flex-1 bg-darkGray border border-borderGray rounded-xl p-2.5 overflow-y-auto max-h-[270px] space-y-2 text-xs">
+                        <p class="text-gray-500 text-center py-4">Belum ada riwayat.</p>
                     </div>
                 </div>
 
@@ -234,34 +296,34 @@
         </div>
 
         <!-- Slot Kenangan & Riwayat Update -->
-        <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-lg space-y-4">
+        <div class="bg-cardGray p-6 rounded-2xl border border-borderGray shadow-xl space-y-4">
             <div class="flex justify-between items-center border-b border-borderGray pb-3">
                 <h3 class="text-base font-semibold flex items-center gap-2 text-brandYellow">
-                    <span>📜✨</span> Slot Kenangan & Riwayat Update DuitkuAkeh
+                    <span></span>Riwayat Update DuitkuAkeh
                 </h3>
                 <span class="text-xs text-gray-400">Jejak Pembuatan & Versi</span>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                 <div class="bg-darkGray p-4 rounded-xl border border-borderGray space-y-2">
                     <div class="flex justify-between items-center font-semibold text-gray-200">
-                        <span>Versi 1.0 - 2.0 (Inisiasi)</span>
-                        <span class="text-brandGreen">April 2026</span>
+                        <span>Versi 1.0 - 5.2 (Inisiasi)</span>
+                        <span class="text-brandGreen">April - Okt 2026</span>
                     </div>
-                    <p class="text-gray-400 leading-relaxed">Rancangan awal web akuntansi mini single-file, transisi dari ide AI asisten ke fokus akuntansi murni, implementasi penyimpanan lokal database.</p>
+                    <p class="text-gray-400 leading-relaxed">Multi-dompet, grafik Chart.js, celengan impian, notepad utang/piutang, hingga pelunasan bertahap.</p>
                 </div>
                 <div class="bg-darkGray p-4 rounded-xl border border-borderGray space-y-2">
                     <div class="flex justify-between items-center font-semibold text-gray-200">
-                        <span>Versi 3.0 - 3.1 (Ekspansi Fitur)</span>
-                        <span class="text-brandYellow">Oktober 2026</span>
-                    </div>
-                    <p class="text-gray-400 leading-relaxed">Penambahan multi-dompet e-money, toggle modal all-in, celengan impian, grafik lingkaran Chart.js, serta fitur hapus per item.</p>
-                </div>
-                <div class="bg-darkGray p-4 rounded-xl border border-borderGray space-y-2">
-                    <div class="flex justify-between items-center font-semibold text-gray-200">
-                        <span>Versi 4.3 Pro (Edit Nominal Dompet)</span>
+                        <span>Versi 5.3 Pro (Clean UI & History Export)</span>
                         <span class="text-blue-400">Terbaru</span>
                     </div>
-                    <p class="text-gray-400 leading-relaxed">Penambahan tombol edit nominal/nama dompet secara langsung, layout supermarket berdampingan, dan posisi laba bersih di bawah grafik.</p>
+                    <p class="text-gray-400 leading-relaxed">Penyempurnaan visibilitas dompet (sembunyi sempurna saat catat utang/piutang baru, muncul saat pembayaran), serta fitur Ekspor/Impor khusus riwayat transaksi.</p>
+                </div>
+                <div class="bg-darkGray p-4 rounded-xl border border-borderGray space-y-2">
+                    <div class="flex justify-between items-center font-semibold text-gray-200">
+                        <span>Masa Depan APK</span>
+                        <span class="text-yellow-400">Siap Build</span>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed">Siap dibungkus menjadi aplikasi Android mandiri offline-first menggunakan PWABuilder.</p>
                 </div>
             </div>
         </div>
@@ -269,53 +331,53 @@
     </main>
 
     <!-- Modal Tambah Dompet -->
-    <div id="walletModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50 p-4">
-        <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4">
+    <div id="walletModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-all">
+        <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl fade-in">
             <h3 class="text-lg font-semibold" id="walletModalTitle">Tambah Dompet / Bank</h3>
             <form id="walletForm" class="space-y-3">
                 <input type="hidden" id="walletEditId">
-                <input type="text" id="walletNameInput" placeholder="Nama Dompet (cth: SeaBank)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen">
-                <input type="number" id="walletBalanceInput" placeholder="Saldo (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen">
+                <input type="text" id="walletNameInput" placeholder="Nama Dompet (cth: SeaBank)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all">
+                <input type="number" id="walletBalanceInput" placeholder="Saldo Awal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all">
                 <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="closeWalletModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl text-sm">Batal</button>
-                    <button type="submit" class="flex-1 bg-brandGreen text-darkGray font-bold py-2 rounded-xl text-sm">Simpan</button>
+                    <button type="button" onclick="closeWalletModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl text-sm transition-all hover:bg-gray-700">Batal</button>
+                    <button type="submit" class="flex-1 bg-brandGreen text-darkGray font-bold py-2 rounded-xl text-sm transition-all hover:opacity-90">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Modal Tambah Beban Rutin -->
-    <div id="expenseItemModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50 p-4">
-        <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4">
+    <div id="expenseItemModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-all">
+        <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl fade-in">
             <h3 class="text-lg font-semibold">Kelola Beban Rutin</h3>
             <form id="expenseItemForm" class="space-y-3 text-xs">
-                <input type="text" id="expenseItemName" placeholder="Nama Beban (cth: Internet WiFi)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm">
-                <input type="number" id="expenseItemCost" placeholder="Estimasi Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm">
-                <select id="expenseItemFreq" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm">
+                <input type="text" id="expenseItemName" placeholder="Nama Beban (cth: Internet WiFi)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all">
+                <input type="number" id="expenseItemCost" placeholder="Estimasi Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all">
+                <select id="expenseItemFreq" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all">
                     <option value="month">Per Bulan</option>
                     <option value="year">Per Tahun</option>
                     <option value="week">Per Minggu</option>
                     <option value="day">Per Hari</option>
                 </select>
                 <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="closeExpenseItemModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl">Batal</button>
-                    <button type="submit" class="flex-1 bg-brandYellow text-darkGray font-bold py-2 rounded-xl">Tambah</button>
+                    <button type="button" onclick="closeExpenseItemModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl transition-all hover:bg-gray-700">Batal</button>
+                    <button type="submit" class="flex-1 bg-brandYellow text-darkGray font-bold py-2 rounded-xl transition-all hover:opacity-90">Tambah</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Modal Target Celengan -->
-    <div id="goalModal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50 p-4">
-        <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4">
+    <div id="goalModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-all">
+        <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl fade-in">
             <h3 class="text-lg font-semibold">Buat Target Celengan</h3>
             <form id="goalForm" class="space-y-3 text-xs">
-                <input type="text" id="goalNameInput" placeholder="Nama Impian (cth: Helm Baru)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen">
-                <input type="number" id="goalTargetInput" placeholder="Target Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen">
-                <input type="number" id="goalCurrentInput" placeholder="Terkumpul Saat Ini (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen">
+                <input type="text" id="goalNameInput" placeholder="Nama Impian (cth: Helm Baru)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all">
+                <input type="number" id="goalTargetInput" placeholder="Target Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all">
+                <input type="number" id="goalCurrentInput" placeholder="Terkumpul Saat Ini (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all">
                 <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="closeGoalModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl">Batal</button>
-                    <button type="submit" class="flex-1 bg-brandYellow text-darkGray font-bold py-2 rounded-xl">Simpan</button>
+                    <button type="button" onclick="closeGoalModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl transition-all hover:bg-gray-700">Batal</button>
+                    <button type="submit" class="flex-1 bg-brandYellow text-darkGray font-bold py-2 rounded-xl transition-all hover:opacity-90">Simpan</button>
                 </div>
             </form>
         </div>
@@ -323,25 +385,26 @@
 
     <!-- Footer -->
     <footer class="text-center py-6 text-xs text-gray-500 border-t border-borderGray mt-auto">
-        DuitkuAkeh Pro v4.3 &copy; 2026 - Terintegrasi Database Lokal (LocalStorage) 🚀
+        DuitkuAkeh v5.3 &copy; 2026 - Terintegrasi Database Lokal (LocalStorage) 🚀
     </footer>
 
-    <!-- JavaScript Logika Pro v4.3 -->
+    <!-- JavaScript Logika Pro v5.3 -->
     <script>
         document.getElementById('dateInput').valueAsDate = new Date();
 
-        let wallets = JSON.parse(localStorage.getItem('duitkuakeh_wallets')) || [
-            { id: '1', name: 'Dompet Tunai', balance: 50000, active: true },
-            { id: '2', name: 'Rekening Bank', balance: 250000, active: true },
-            { id: '3', name: 'E-Wallet', balance: 100000, active: true }
-        ];
+        let wallets = JSON.parse(localStorage.getItem('duitkuakeh_wallets')) || [];
         let transactions = JSON.parse(localStorage.getItem('duitkuakeh_transactions')) || [];
-        let goals = JSON.parse(localStorage.getItem('duitkuakeh_goals')) || [
-            { id: '1', name: 'Beli Aksesoris Motor', target: 200000, current: 75000 }
-        ];
-        let expenseItems = JSON.parse(localStorage.getItem('duitkuakeh_expenses')) || [
-            { id: '1', name: 'Internet WiFi', cost: 150000, freq: 'month', active: true },
-            { id: '2', name: 'Bensin Harian', cost: 100000, freq: 'month', active: true }
+        let goals = JSON.parse(localStorage.getItem('duitkuakeh_goals')) || [];
+        let expenseItems = JSON.parse(localStorage.getItem('duitkuakeh_expenses')) || [];
+        let debts = JSON.parse(localStorage.getItem('duitkuakeh_debts')) || [];
+        
+        const fixedCategories = [
+            "🍔 Makanan & Minuman",
+            "🚗 Transportasi",
+            "🛍️ Belanja",
+            "⚡ Tagihan & Beban",
+            "🎮 Hiburan",
+            "💰 Gaji / Pendapatan"
         ];
 
         let trendLineChart = null;
@@ -356,19 +419,197 @@
             localStorage.setItem('duitkuakeh_transactions', JSON.stringify(transactions));
             localStorage.setItem('duitkuakeh_goals', JSON.stringify(goals));
             localStorage.setItem('duitkuakeh_expenses', JSON.stringify(expenseItems));
+            localStorage.setItem('duitkuakeh_debts', JSON.stringify(debts));
         };
 
-        const getFilteredTransactions = () => {
-            const range = document.getElementById('timeRangeFilter').value;
-            if (range === 'all') return transactions;
+        // Ekspor & Impor Semua Data
+        window.exportAllData = () => {
+            const dataObj = { wallets, transactions, goals, expenseItems, debts, version: "5.3", date: new Date().toISOString() };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `DuitkuAkeh_AllData_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        };
 
+        window.importAllData = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (confirm("Impor data ini akan menggantikan seluruh data saat ini. Lanjutkan?")) {
+                        wallets = imported.wallets || [];
+                        transactions = imported.transactions || [];
+                        goals = imported.goals || [];
+                        expenseItems = imported.expenseItems || [];
+                        debts = imported.debts || [];
+                        saveData();
+                        updateUI();
+                        alert("Semua data berhasil diimpor! 🎉");
+                    }
+                } catch (err) {
+                    alert("File arsip tidak valid atau rusak!");
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        // Ekspor & Impor Khusus Riwayat Transaksi Saja
+        window.exportTransactionsOnly = () => {
+            const dataObj = { transactions, version: "5.3-tx", date: new Date().toISOString() };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `DuitkuAkeh_RiwayatTransaksi_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        };
+
+        window.importTransactionsOnly = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported.transactions && Array.isArray(imported.transactions)) {
+                        if (confirm(`Impor ${imported.transactions.length} riwayat transaksi? Data riwayat yang ada akan digabungkan atau ditimpa.`)) {
+                            // Gabungkan atau ganti (di sini kita timpa/ganti dengan data riwayat file)
+                            transactions = imported.transactions;
+                            saveData();
+                            updateUI();
+                            alert("Riwayat transaksi berhasil diimpor! 📜✨");
+                        }
+                    } else {
+                        alert("Format file khusus riwayat tidak valid!");
+                    }
+                } catch (err) {
+                    alert("Gagal membaca file riwayat!");
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        const handleTypeChange = () => {
+            const type = document.getElementById('typeInput').value;
+            const categorySelect = document.getElementById('categorySelect');
+            const walletWrapper = document.getElementById('walletWrapper');
+            const detailContainer = document.getElementById('detailContainer');
+            categorySelect.innerHTML = '';
+
+            if (type === 'Utang' || type === 'Piutang') {
+                detailContainer.style.display = 'block';
+
+                if (type === 'Utang') {
+                    const opt1 = document.createElement('option');
+                    opt1.value = "Kredit (+)";
+                    opt1.textContent = "🔴 Kredit (+) - Catat Utang Baru / Tambah Utang";
+                    
+                    const opt2 = document.createElement('option');
+                    opt2.value = "Debit (-)";
+                    opt2.textContent = "🔵 Debit (-) - Bayar / Lunas Utang (Kurangi Saldo)";
+                    
+                    categorySelect.appendChild(opt2);
+                    categorySelect.appendChild(opt1);
+                } else {
+                    const opt1 = document.createElement('option');
+                    opt1.value = "Debit (+)";
+                    opt1.textContent = "🔵 Debit (+) - Catat Piutang Baru / Tambah Piutang";
+                    
+                    const opt2 = document.createElement('option');
+                    opt2.value = "Kredit (-)";
+                    opt2.textContent = "🔴 Kredit (-) - Terima Bayaran Piutang (Tambah Saldo)";
+                    
+                    categorySelect.appendChild(opt1);
+                    categorySelect.appendChild(opt2);
+                }
+                
+                handleCategoryChange();
+
+            } else {
+                walletWrapper.style.display = 'block';
+                detailContainer.style.display = 'block';
+                fixedCategories.forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat;
+                    opt.textContent = cat;
+                    categorySelect.appendChild(opt);
+                });
+                const otherOpt = document.createElement('option');
+                otherOpt.value = "📦 Lainnya";
+                otherOpt.textContent = "📦 Lainnya (Bebas Ketik)";
+                categorySelect.appendChild(otherOpt);
+                handleCategoryChange();
+            }
+        };
+
+        const handleCategoryChange = () => {
+            const type = document.getElementById('typeInput').value;
+            const categorySelect = document.getElementById('categorySelect').value;
+            const detailLabel = document.getElementById('detailLabel');
+            const walletWrapper = document.getElementById('walletWrapper');
+            let detailInput = document.getElementById('detailInput');
+
+            if (type === 'Utang' || type === 'Piutang') {
+                if (categorySelect === 'Debit (-)' || categorySelect === 'Kredit (-)') {
+                    // Saat Pembayaran / Pelunasan -> Tampilkan Kotak Dompet
+                    walletWrapper.style.display = 'block'; 
+                    detailLabel.innerHTML = `Pilih ${type} yang Dilunasi dari Notepad`;
+                    let activeDebts = debts.filter(d => d.type === type && d.status !== 'Lunas');
+                    if (activeDebts.length === 0) {
+                        detailInput.outerHTML = `<select id="detailInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all"><option value="">Belum ada data ${type} aktif di notepad!</option></select>`;
+                    } else {
+                        let optionsHtml = `<select id="detailInput" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">`;
+                        activeDebts.forEach(d => {
+                            optionsHtml += `<option value="${d.detail}">${d.detail} (Sisa: ${formatRupiah(d.amount)})</option>`;
+                        });
+                        optionsHtml += `</select>`;
+                        detailInput.outerHTML = optionsHtml;
+                    }
+                } else {
+                    // Saat Catat Utang/Piutang Baru (Kredit+ / Debit+) -> SEMBUNYIKAN KOTAK DOMPET SEMPURNA
+                    walletWrapper.style.display = 'none'; 
+                    detailLabel.innerHTML = `Nama Pihak / Pemberi (Jika sudah ada, otomatis akumulasi) <span class="text-brandYellow">*Wajib</span>`;
+                    let currentEl = document.getElementById('detailInput');
+                    if(currentEl.tagName !== 'INPUT') {
+                        currentEl.outerHTML = `<input type="text" id="detailInput" placeholder="Cth: A / Budi" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">`;
+                    } else {
+                        currentEl.placeholder = "Cth: A / Budi";
+                    }
+                }
+            } else {
+                walletWrapper.style.display = 'block';
+                let currentEl = document.getElementById('detailInput');
+                if(currentEl.tagName !== 'INPUT') {
+                    currentEl.outerHTML = `<input type="text" id="detailInput" placeholder="Cth: Es Jeruk" class="w-full bg-darkGray border border-borderGray rounded-xl p-2 focus:outline-none focus:border-brandGreen transition-all">`;
+                }
+                if (categorySelect === "📦 Lainnya") {
+                    detailLabel.innerHTML = `Keterangan Bebas <span class="text-brandYellow">*Wajib (Cth: Nemu Duit)</span>`;
+                    document.getElementById('detailInput').placeholder = "Cth: Nemu Duit di Jalan";
+                } else {
+                    detailLabel.innerHTML = `Detail Catatan <span class="text-brandYellow">*Wajib</span>`;
+                    document.getElementById('detailInput').placeholder = "Cth: Bensin";
+                }
+            }
+        };
+
+        const filterByDateRange = (txList, range) => {
+            if (range === 'all') return txList;
             const now = new Date();
-            return transactions.filter(tx => {
-                const txDate = new Date(tx.date);
+            return txList.filter(tx => {
+                const txDate = new Date(tx.rawDate || tx.date);
+                if (isNaN(txDate)) return true;
                 if (range === 'day') {
                     return txDate.toDateString() === now.toDateString();
                 } else if (range === 'week') {
-                    const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+                    const startOfWeek = new Date(now);
+                    startOfWeek.setDate(now.getDate() - now.getDay());
+                    startOfWeek.setHours(0,0,0,0);
                     return txDate >= startOfWeek;
                 } else if (range === 'month') {
                     return txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
@@ -379,12 +620,18 @@
             });
         };
 
+        const getFilteredTransactions = () => {
+            const range = document.getElementById('timeRangeFilter').value;
+            return filterByDateRange(transactions, range);
+        };
+
         const updateUI = () => {
             renderWallets();
             renderTransactions();
             renderWalletDropdown();
             renderGoals();
             renderExpenseItemsSummary();
+            renderDebtNotepad();
             calculateSummary();
             updateCharts();
             updateTopTier();
@@ -392,19 +639,23 @@
 
         const renderWallets = () => {
             const listEl = document.getElementById('walletList');
+            if (wallets.length === 0) {
+                listEl.innerHTML = `<p class="text-xs text-gray-500 text-center py-3">Belum ada sumber dana. Klik "+ Dompet".</p>`;
+                return;
+            }
             listEl.innerHTML = '';
             wallets.forEach(wallet => {
                 const card = document.createElement('div');
-                card.className = `p-2 rounded-xl border flex justify-between items-center text-xs ${wallet.active ? 'bg-darkGray border-borderGray' : 'bg-darkGray/40 border-borderGray/30 opacity-50'}`;
+                card.className = `p-2.5 rounded-xl border flex justify-between items-center text-xs transition-all ${wallet.active ? 'bg-darkGray border-borderGray hover:border-gray-600' : 'bg-darkGray/40 border-borderGray/30 opacity-50'}`;
                 card.innerHTML = `
                     <div>
                         <p class="font-medium text-gray-200">${wallet.name}</p>
                         <p class="${wallet.active ? 'text-brandGreen' : 'text-gray-500'} font-bold">${formatRupiah(wallet.balance)}</p>
                     </div>
                     <div class="flex items-center gap-1">
-                        <button onclick="openEditWalletModal('${wallet.id}')" class="text-[9px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded hover:bg-blue-500/30">Edit</button>
-                        <button onclick="toggleWallet('${wallet.id}')" class="text-[9px] bg-borderGray px-1.5 py-0.5 rounded hover:bg-gray-700">${wallet.active ? 'Mati' : 'Aktif'}</button>
-                        <button onclick="deleteWallet('${wallet.id}')" class="text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded hover:bg-red-500/30">✕</button>
+                        <button onclick="openEditWalletModal('${wallet.id}')" class="text-[9px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded hover:bg-blue-500/30 transition-all">Edit</button>
+                        <button onclick="toggleWallet('${wallet.id}')" class="text-[9px] bg-borderGray px-1.5 py-0.5 rounded hover:bg-gray-700 transition-all">${wallet.active ? 'Mati' : 'Aktif'}</button>
+                        <button onclick="deleteWallet('${wallet.id}')" class="text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded hover:bg-red-500/30 transition-all">✕</button>
                     </div>
                 `;
                 listEl.appendChild(card);
@@ -414,7 +665,15 @@
         const renderWalletDropdown = () => {
             const selectEl = document.getElementById('walletSourceInput');
             selectEl.innerHTML = '';
-            wallets.filter(w => w.active).forEach(wallet => {
+            const activeWallets = wallets.filter(w => w.active);
+            if (activeWallets.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = "";
+                opt.textContent = "Buat dompet dulu di bawah!";
+                selectEl.appendChild(opt);
+                return;
+            }
+            activeWallets.forEach(wallet => {
                 const opt = document.createElement('option');
                 opt.value = wallet.id;
                 opt.textContent = wallet.name;
@@ -443,28 +702,95 @@
             });
         };
 
+        const renderDebtNotepad = () => {
+            const listEl = document.getElementById('debtNotepadList');
+            if (debts.length === 0) {
+                listEl.innerHTML = `<p class="text-gray-500 text-center py-4">Belum ada catatan utang/piutang.</p>`;
+                return;
+            }
+            listEl.innerHTML = '';
+            debts.forEach((debt, index) => {
+                const isPaid = debt.status === 'Lunas';
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `p-2.5 rounded-xl border flex justify-between items-center transition-all ${isPaid ? 'bg-brandGreen/10 border-brandGreen/40' : 'bg-red-500/10 border-red-500/40'}`;
+                itemDiv.innerHTML = `
+                    <div>
+                        <p class="font-bold ${isPaid ? 'text-brandGreen' : 'text-red-400'}">[${debt.type}] ${debt.detail}</p>
+                        <p class="text-[10px] text-gray-300 font-semibold">Sisa: ${formatRupiah(debt.amount)} • <span class="${isPaid ? 'text-brandGreen' : 'text-red-400'} font-bold">${debt.status}</span></p>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="preparePayDebt(${index})" class="text-[10px] px-2 py-1 rounded font-bold transition-all ${isPaid ? 'bg-borderGray text-gray-400 cursor-not-allowed' : 'bg-brandBlue/20 text-brandBlue hover:bg-brandBlue/30'}" ${isPaid ? 'disabled' : ''}>
+                            Bayar / Lunas
+                        </button>
+                        <button onclick="deleteDebt(${index})" class="text-[10px] bg-red-500/20 text-red-400 px-1.5 py-1 rounded hover:bg-red-500/30 transition-all">✕</button>
+                    </div>
+                `;
+                listEl.appendChild(itemDiv);
+            });
+        };
+
+        window.preparePayDebt = (index) => {
+            const debt = debts[index];
+            if (debt.status === 'Lunas') return;
+
+            document.getElementById('typeInput').value = debt.type;
+            handleTypeChange();
+
+            const categorySelect = document.getElementById('categorySelect');
+            categorySelect.value = debt.type === 'Utang' ? 'Debit (-)' : 'Kredit (-)';
+            handleCategoryChange();
+
+            setTimeout(() => {
+                const detailInput = document.getElementById('detailInput');
+                if(detailInput && detailInput.tagName === 'SELECT') {
+                    detailInput.value = debt.detail;
+                }
+                document.getElementById('amountInput').value = debt.amount;
+                window.scrollTo({ top: 400, behavior: 'smooth' });
+            }, 50);
+        };
+
         const renderTransactions = () => {
             const listEl = document.getElementById('transactionList');
-            const filtered = getFilteredTransactions();
+            const historyRange = document.getElementById('historyTimeFilter').value;
+            const categoryFilter = document.getElementById('historyCategoryFilter').value;
+            
+            let filtered = filterByDateRange(transactions, historyRange);
+
+            if (categoryFilter === 'CUSTOM_ONLY') {
+                filtered = filtered.filter(tx => tx.category === '📦 Lainnya');
+            }
+
             if (filtered.length === 0) {
-                listEl.innerHTML = `<p class="text-gray-500 text-center py-4">Tidak ada transaksi.</p>`;
+                listEl.innerHTML = `<p class="text-gray-500 text-center py-4">Tidak ada riwayat.</p>`;
                 return;
             }
             listEl.innerHTML = '';
             filtered.slice().reverse().forEach(tx => {
                 const originalIndex = transactions.findIndex(t => t === tx);
-                const isIncome = tx.type === 'Pemasukan';
+                
+                let dotColorClass = "bg-yellow-500";
+                if (tx.type === 'Pemasukan' || (tx.type === 'Piutang' && tx.category === 'Debit (+)') || (tx.type === 'Utang' && tx.category === 'Debit (-)')) {
+                    dotColorClass = "bg-brandBlue"; 
+                } else if (tx.type === 'Pengeluaran' || (tx.type === 'Utang' && tx.category === 'Kredit (+)') || (tx.type === 'Piutang' && tx.category === 'Kredit (-)')) {
+                    dotColorClass = "bg-red-500"; 
+                }
+
+                const isIncome = tx.type === 'Pemasukan' || tx.type === 'Piutang';
                 const wallet = wallets.find(w => w.id === tx.walletId);
                 const itemDiv = document.createElement('div');
-                itemDiv.className = "bg-darkGray p-2 rounded-xl border border-borderGray flex justify-between items-center";
+                itemDiv.className = "bg-darkGray p-2.5 rounded-xl border border-borderGray flex justify-between items-center transition-all hover:border-gray-600";
                 itemDiv.innerHTML = `
-                    <div>
-                        <p class="font-medium text-gray-200">${tx.category}</p>
-                        <p class="text-[10px] text-gray-400">${wallet ? wallet.name : 'Dompet'} • ${tx.date}</p>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full ${dotColorClass} inline-block"></span>
+                        <div>
+                            <p class="font-medium text-gray-200">[${tx.type}] ${tx.category} ${tx.detail ? '• <span class="text-gray-400 italic">"' + tx.detail + '"</span>' : ''}</p>
+                            <p class="text-[10px] text-gray-400">${wallet ? wallet.name : 'Notepad Catatan'} • ${tx.date}</p>
+                        </div>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="font-semibold ${isIncome ? 'text-brandGreen' : 'text-brandYellow'}">${isIncome ? '+' : '-'} ${formatRupiah(tx.amount)}</span>
-                        <button onclick="deleteTransaction(${originalIndex})" class="text-[10px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded hover:bg-red-500/30">✕</button>
+                        <button onclick="deleteTransaction(${originalIndex})" class="text-[10px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded hover:bg-red-500/30 transition-all">✕</button>
                     </div>
                 `;
                 listEl.appendChild(itemDiv);
@@ -481,13 +807,13 @@
             goals.forEach(goal => {
                 const percent = Math.min(100, Math.round((goal.current / goal.target) * 100));
                 const item = document.createElement('div');
-                item.className = "bg-darkGray p-2.5 rounded-xl border border-borderGray space-y-1.5 text-xs";
+                item.className = "bg-darkGray p-2.5 rounded-xl border border-borderGray space-y-1.5 text-xs transition-all";
                 item.innerHTML = `
                     <div class="flex justify-between font-medium items-center">
                         <span class="text-gray-200">${goal.name}</span>
                         <div class="flex items-center gap-2">
                             <span class="text-brandYellow">${percent}%</span>
-                            <button onclick="deleteGoal('${goal.id}')" class="text-[9px] text-red-400">Hapus</button>
+                            <button onclick="deleteGoal('${goal.id}')" class="text-[9px] text-red-400 hover:text-red-300">Hapus</button>
                         </div>
                     </div>
                     <div class="w-full bg-borderGray h-1.5 rounded-full overflow-hidden">
@@ -511,8 +837,8 @@
             let totalOut = 0;
 
             filtered.forEach(tx => {
-                if (tx.type === 'Pemasukan') totalIn += Number(tx.amount);
-                else totalOut += Number(tx.amount);
+                if (tx.type === 'Pemasukan' || (tx.type === 'Piutang' && tx.category === 'Kredit (-)')) totalIn += Number(tx.amount);
+                else if (tx.type === 'Pengeluaran' || (tx.type === 'Utang' && tx.category === 'Debit (-)')) totalOut += Number(tx.amount);
             });
 
             let activeExpensesTotal = 0;
@@ -547,7 +873,7 @@
             
             const netEl = document.getElementById('netProfit');
             netEl.textContent = formatRupiah(netProfit);
-            netEl.className = `text-lg font-bold ${netProfit >= 0 ? 'text-brandGreen' : 'text-brandYellow'}`;
+            netEl.className = `text-base font-bold ${netProfit >= 0 ? 'text-brandGreen' : 'text-brandYellow'}`;
         };
 
         const updateTopTier = () => {
@@ -556,15 +882,15 @@
             let maxExpense = null;
 
             filtered.forEach(tx => {
-                if(tx.type === 'Pemasukan') {
+                if(tx.type === 'Pemasukan' || tx.type === 'Piutang') {
                     if(!maxIncome || Number(tx.amount) > Number(maxIncome.amount)) maxIncome = tx;
-                } else {
+                } else if(tx.type === 'Pengeluaran' || tx.type === 'Utang') {
                     if(!maxExpense || Number(tx.amount) > Number(maxExpense.amount)) maxExpense = tx;
                 }
             });
 
-            document.getElementById('topIncome').textContent = maxIncome ? `${maxIncome.category} (${formatRupiah(maxIncome.amount)})` : 'Belum ada';
-            document.getElementById('topExpense').textContent = maxExpense ? `${maxExpense.category} (${formatRupiah(maxExpense.amount)})` : 'Belum ada';
+            document.getElementById('topIncome').textContent = maxIncome ? `${maxIncome.detail || maxIncome.category} (${formatRupiah(maxIncome.amount)})` : 'Belum ada';
+            document.getElementById('topExpense').textContent = maxExpense ? `${maxExpense.detail || maxExpense.category} (${formatRupiah(maxExpense.amount)})` : 'Belum ada';
         };
 
         const updateCharts = () => {
@@ -573,9 +899,10 @@
             const ctxLine = document.getElementById('trendLineChart').getContext('2d');
             const dateMap = {};
             filtered.forEach(tx => {
-                if(!dateMap[tx.date]) dateMap[tx.date] = { income: 0, expense: 0 };
-                if(tx.type === 'Pemasukan') dateMap[tx.date].income += Number(tx.amount);
-                else dateMap[tx.date].expense += Number(tx.amount);
+                const key = tx.date;
+                if(!dateMap[key]) dateMap[key] = { income: 0, expense: 0 };
+                if(tx.type === 'Pemasukan' || (tx.type === 'Piutang' && tx.category === 'Kredit (-)')) dateMap[key].income += Number(tx.amount);
+                else if(tx.type === 'Pengeluaran' || (tx.type === 'Utang' && tx.category === 'Debit (-)')) dateMap[key].expense += Number(tx.amount);
             });
 
             const sortedDates = Object.keys(dateMap).sort((a,b) => new Date(a) - new Date(b));
@@ -605,8 +932,9 @@
 
             const ctxBar = document.getElementById('categoryBarChart').getContext('2d');
             const categories = {};
-            filtered.filter(t => t.type === 'Pengeluaran').forEach(t => {
-                categories[t.category] = (categories[t.category] || 0) + Number(t.amount);
+            filtered.filter(t => t.type === 'Pengeluaran' || t.category === 'Debit (-)').forEach(t => {
+                const catKey = (t.category === '📦 Lainnya' && t.detail) ? `📦 Lainnya (${t.detail})` : t.category;
+                categories[catKey] = (categories[catKey] || 0) + Number(t.amount);
             });
 
             const barLabels = Object.keys(categories);
@@ -637,23 +965,28 @@
         };
 
         window.deleteWallet = (id) => {
-            if(wallets.length <= 1) { alert("Minimal sisa 1 dompet!"); return; }
             if(confirm("Hapus dompet ini?")) { wallets = wallets.filter(w => w.id !== id); saveData(); updateUI(); }
         };
         window.toggleWallet = (id) => { const w = wallets.find(x => x.id === id); if(w) { w.active = !w.active; saveData(); updateUI(); } };
 
         window.deleteGoal = (id) => { if(confirm("Hapus target?")) { goals = goals.filter(g => g.id !== id); saveData(); updateUI(); } };
-        
         window.deleteExpenseItem = (id) => { expenseItems = expenseItems.filter(e => e.id !== id); saveData(); updateUI(); };
         window.toggleExpenseItem = (id) => { const item = expenseItems.find(e => e.id === id); if(item) { item.active = !item.active; saveData(); updateUI(); } };
 
+        window.deleteDebt = (index) => {
+            if(confirm("Hapus catatan utang/piutang ini?")) {
+                debts.splice(index, 1);
+                saveData(); updateUI();
+            }
+        };
+
         window.deleteTransaction = (index) => {
-            if(confirm("Hapus riwayat ini? Saldo dompet akan dikembalikan.")) {
+            if(confirm("Hapus riwayat ini? Saldo dompet akan disesuaikan kembali.")) {
                 const tx = transactions[index];
                 const wallet = wallets.find(w => w.id === tx.walletId);
                 if(wallet) {
-                    if(tx.type === 'Pemasukan') wallet.balance -= Number(tx.amount);
-                    else wallet.balance += Number(tx.amount);
+                    if(tx.type === 'Pemasukan' || (tx.type === 'Piutang' && tx.category === 'Kredit (-)')) wallet.balance -= Number(tx.amount);
+                    else if(tx.type === 'Pengeluaran' || (tx.type === 'Utang' && tx.category === 'Debit (-)')) wallet.balance += Number(tx.amount);
                 }
                 transactions.splice(index, 1);
                 saveData(); updateUI();
@@ -679,10 +1012,8 @@
         };
 
         window.closeWalletModal = () => document.getElementById('walletModal').classList.replace('flex', 'hidden');
-
         window.openExpenseItemModal = () => document.getElementById('expenseItemModal').classList.replace('hidden', 'flex');
         window.closeExpenseItemModal = () => document.getElementById('expenseItemModal').classList.replace('flex', 'hidden');
-
         window.openGoalModal = () => document.getElementById('goalModal').classList.replace('hidden', 'flex');
         window.closeGoalModal = () => document.getElementById('goalModal').classList.replace('flex', 'hidden');
 
@@ -693,14 +1024,9 @@
             const balance = Number(document.getElementById('walletBalanceInput').value);
 
             if(editId) {
-                // Edit dompet yang ada
                 const w = wallets.find(item => item.id === editId);
-                if(w) {
-                    w.name = name;
-                    w.balance = balance;
-                }
+                if(w) { w.name = name; w.balance = balance; }
             } else {
-                // Tambah dompet baru
                 wallets.push({ id: Date.now().toString(), name, balance, active: true });
             }
 
@@ -724,25 +1050,80 @@
             const type = document.getElementById('typeInput').value;
             const walletId = document.getElementById('walletSourceInput').value;
             const amount = Number(document.getElementById('amountInput').value);
-            const category = document.getElementById('categoryInput').value;
             const rawDate = document.getElementById('dateInput').value;
-            
             const dateFormatted = new Date(rawDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            
+            const categorySelectVal = document.getElementById('categorySelect').value;
+            let detailEl = document.getElementById('detailInput');
+            let detail = detailEl.value ? detailEl.value.trim() : "";
 
             const wallet = wallets.find(w => w.id === walletId);
-            if(!wallet) { alert("Pilih dompet aktif!"); return; }
+
+            if (type === 'Utang' || type === 'Piutang') {
+                if (!detail) { alert("Wajib isi atau pilih pihak terkait!"); return; }
+
+                if (categorySelectVal === 'Kredit (+)' || categorySelectVal === 'Debit (+)') {
+                    let existingDebt = debts.find(d => d.type === type && d.detail.toLowerCase() === detail.toLowerCase());
+                    
+                    if (existingDebt) {
+                        let action = confirm(`Catatan "${detail}" sudah ada di notepad dengan sisa ${formatRupiah(existingDebt.amount)}.\n\nKlik OK untuk MENAMBAH nominal utangnya, atau Batal jika ingin membuat catatan baru dengan nama persis.`);
+                        if (action) {
+                            existingDebt.amount += amount;
+                            existingDebt.status = 'Belum Lunas';
+                        } else {
+                            let uniqueDetail = prompt("Masukkan nama pembeda (misal: " + detail + " (2)):", detail + " Baru");
+                            if (!uniqueDetail) return;
+                            debts.push({ type, detail: uniqueDetail, amount, status: 'Belum Lunas', date: dateFormatted });
+                            detail = uniqueDetail;
+                        }
+                    } else {
+                        debts.push({ type, detail, amount, status: 'Belum Lunas', date: dateFormatted });
+                    }
+
+                    transactions.push({ type, walletId: null, amount, category: categorySelectVal, detail, date: dateFormatted, rawDate });
+                } else {
+                    if(!wallet) { alert("Pilih dompet sumber pembayaran!"); return; }
+                    
+                    let targetDebt = debts.find(d => d.detail === detail && d.type === type && d.status !== 'Lunas');
+                    if (!targetDebt) { alert("Catatan utang/piutang tidak ditemukan atau sudah lunas!"); return; }
+
+                    if (amount >= targetDebt.amount) {
+                        targetDebt.amount = 0;
+                        targetDebt.status = 'Lunas';
+                    } else {
+                        targetDebt.amount -= amount;
+                    }
+
+                    if (type === 'Utang') wallet.balance -= amount;
+                    else wallet.balance += amount;
+
+                    transactions.push({ type, walletId, amount, category: categorySelectVal, detail: `${detail} (Cicil/Bayar)`, date: dateFormatted, rawDate });
+                }
+
+                saveData();
+                document.getElementById('amountInput').value = '';
+                updateUI();
+                return;
+            }
+
+            if (!detail) { alert("Wajib mengisi detail catatan!"); return; }
+            if(!wallet) { alert("Pilih dompet aktif terlebih dahulu!"); return; }
 
             if(type === 'Pemasukan') wallet.balance += amount;
             else wallet.balance -= amount;
 
-            transactions.push({ type, walletId, amount, category, date: dateFormatted });
-            saveData(); document.getElementById('amountInput').value = ''; updateUI();
+            transactions.push({ type, walletId, amount, category: categorySelectVal, detail, date: dateFormatted, rawDate });
+            saveData(); 
+            document.getElementById('amountInput').value = '';
+            document.getElementById('detailInput').value = '';
+            updateUI();
         });
 
         document.getElementById('resetDataBtn').addEventListener('click', () => {
             if(confirm("Reset seluruh data aplikasi?")) { localStorage.clear(); location.reload(); }
         });
 
+        handleTypeChange();
         updateUI();
     </script>
 </body>
