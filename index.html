@@ -8,10 +8,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Inter, Poppins, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
                     colors: {
                         darkGray: '#121212',
                         cardGray: '#1E1E1E',
@@ -27,9 +36,16 @@
     <style>
         /* Mencegah font patah-patah dan membuat teks lebih halus di semua perangkat */
         body {
+            font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
+        }
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+        .font-mono-num {
+            font-family: 'JetBrains Mono', monospace;
         }
         .fade-in {
             animation: fadeIn 0.3s ease-in-out forwards;
@@ -63,7 +79,7 @@
             <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl overflow-hidden bg-brandYellow/10 flex items-center justify-center border border-borderGray shadow-inner shrink-0">
                 <img src="andou.webp" alt="Logo Andou" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/40/F59E0B/121212?text=💰';">
             </div>
-            <h1 class="text-base md:text-xl font-bold tracking-tight">Duitku<span class="text-brandGreen">Akeh</span></h1>
+            <h1 class="text-base md:text-xl font-poppins font-bold tracking-tight">Duitku<span class="text-brandGreen">Akeh</span></h1>
         </div>
         <div class="flex items-center gap-1.5 md:gap-2">
             <!-- Tombol Ekspor Universal (Emoji Saja agar Compact di Mobile) -->
@@ -90,23 +106,23 @@
                 <!-- Kartu Saldo Utama -->
                 <div class="bg-gradient-to-r from-cardGray to-borderGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl relative overflow-hidden transition-all hover:border-gray-600">
                     <div class="absolute right-4 top-4 text-brandYellow/10 text-6xl font-bold select-none pointer-events-none">IDR</div>
-                    <p class="text-gray-400 text-xs font-medium">Total Aset Likuid (Modal All-In)</p>
-                    <h2 id="totalSaldo" class="text-2xl md:text-3xl font-extrabold text-brandGreen mt-1 tracking-tight">Rp 0</h2>
+                    <p class="text-gray-400 text-xs font-medium font-sans">Total Aset Likuid (Modal All-In)</p>
+                    <h2 id="totalSaldo" class="text-2xl md:text-3xl font-poppins font-extrabold text-brandGreen mt-1 tracking-tight font-mono-num">Rp 0</h2>
                     <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-borderGray/50 text-xs">
                         <div>
                             <p class="text-gray-400 text-[10px]">Pemasukan</p>
-                            <p id="totalPemasukan" class="font-semibold text-brandGreen">+ Rp 0</p>
+                            <p id="totalPemasukan" class="font-semibold text-brandGreen font-mono-num">+ Rp 0</p>
                         </div>
                         <div>
                             <p class="text-gray-400 text-[10px]">Pengeluaran</p>
-                            <p id="totalPengeluaran" class="font-semibold text-yellow-400">- Rp 0</p>
+                            <p id="totalPengeluaran" class="font-semibold text-yellow-400 font-mono-num">- Rp 0</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Form Input Transaksi -->
                 <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl">
-                    <h3 class="text-sm md:text-base font-semibold mb-3.5 flex items-center gap-2">
+                    <h3 class="text-sm md:text-base font-poppins font-semibold mb-3.5 flex items-center gap-2">
                         <span>📝</span> Input Transaksi
                     </h3>
                     <form id="transactionForm" class="space-y-3 text-xs">
@@ -147,9 +163,9 @@
                         </div>
                         <div>
                             <label class="block text-gray-400 mb-1">Nominal (Rp)</label>
-                            <input type="number" id="amountInput" placeholder="Contoh: 25000" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-gray-200 transition-all">
+                            <input type="number" id="amountInput" placeholder="Contoh: 25000" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-gray-200 transition-all font-mono-num">
                         </div>
-                        <button type="submit" class="w-full bg-brandGreen text-darkGray font-bold py-3 rounded-xl hover:bg-brandGreen/90 shadow-md transition-all active:scale-[0.98] mt-1">
+                        <button type="submit" class="w-full bg-brandGreen text-darkGray font-poppins font-bold py-3 rounded-xl hover:bg-brandGreen/90 shadow-md transition-all active:scale-[0.98] mt-1">
                             Simpan Transaksi
                         </button>
                     </form>
@@ -158,7 +174,7 @@
                 <!-- Panel Sumber Dana -->
                 <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-xs md:text-sm font-semibold flex items-center gap-2">
+                        <h3 class="text-xs md:text-sm font-poppins font-semibold flex items-center gap-2">
                             <span>💳</span> Sumber Dana
                         </h3>
                         <button onclick="openWalletModal()" class="text-[10px] bg-brandGreen text-darkGray font-bold px-2.5 py-1 rounded-xl shadow hover:opacity-90 transition-all">
@@ -175,7 +191,7 @@
                 
                 <!-- Grafik Garis -->
                 <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl flex flex-col">
-                    <h3 class="text-xs md:text-sm font-semibold mb-3 flex items-center gap-2">
+                    <h3 class="text-xs md:text-sm font-poppins font-semibold mb-3 flex items-center gap-2">
                         <span>📈</span> Tren Arus Kas
                     </h3>
                     <div class="w-full h-48 flex items-center justify-center">
@@ -185,7 +201,7 @@
 
                 <!-- Grafik Batang -->
                 <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl flex flex-col">
-                    <h3 class="text-xs md:text-sm font-semibold mb-3 flex items-center gap-2">
+                    <h3 class="text-xs md:text-sm font-poppins font-semibold mb-3 flex items-center gap-2">
                         <span>📊</span> Komparasi Kategori Pengeluaran
                     </h3>
                     <div class="w-full h-48 flex items-center justify-center">
@@ -197,7 +213,7 @@
                 <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div>
-                            <h3 class="text-xs md:text-sm font-semibold flex items-center gap-2">
+                            <h3 class="text-xs md:text-sm font-poppins font-semibold flex items-center gap-2">
                                <span>🎛️</span> Analisis Laba Bersih & Jangkauan Waktu
                             </h3>
                             <p class="text-[11px] text-gray-400">Pilih rentang waktu untuk grafik dan laporan laba.</p>
@@ -214,7 +230,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-darkGray p-3.5 rounded-xl border border-borderGray text-xs">
                         <div>
                             <p class="text-gray-400 text-[10px]">Laba Bersih (Periode Ini)</p>
-                            <span id="netProfit" class="text-sm md:text-base font-bold text-brandGreen block mt-0.5">Rp 0</span>
+                            <span id="netProfit" class="text-sm md:text-base font-poppins font-bold text-brandGreen block mt-0.5 font-mono-num">Rp 0</span>
                         </div>
                         <div>
                             <div class="flex justify-between items-center mb-1">
@@ -234,7 +250,7 @@
                 <!-- Notepad Utang & Piutang Khusus -->
                 <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl space-y-3">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-xs md:text-sm font-semibold flex items-center gap-2">
+                        <h3 class="text-xs md:text-sm font-poppins font-semibold flex items-center gap-2">
                             <span>📒</span> Notepad Utang & Piutang
                         </h3>
                         <span class="text-[10px] bg-borderGray px-2 py-0.5 rounded text-gray-400">Live Status</span>
@@ -247,7 +263,7 @@
                 <!-- Celengan Impian -->
                 <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl">
                     <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-xs md:text-sm font-semibold flex items-center gap-2">
+                        <h3 class="text-xs md:text-sm font-poppins font-semibold flex items-center gap-2">
                             <span>🎯</span> Celengan Impian
                         </h3>
                         <button onclick="openGoalModal()" class="text-[10px] bg-brandYellow text-darkGray font-bold px-2.5 py-1 rounded-xl shadow hover:opacity-90 transition-all">
@@ -260,7 +276,7 @@
                 <!-- Riwayat Transaksi -->
                 <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl flex-1 flex flex-col h-[400px]">
                     <div class="flex justify-between items-center mb-2">
-                        <h3 class="text-xs md:text-sm font-semibold flex items-center gap-2">
+                        <h3 class="text-xs md:text-sm font-poppins font-semibold flex items-center gap-2">
                             <span>📜</span> Riwayat Terpadu
                         </h3>
                         <div class="flex items-center gap-1">
@@ -306,7 +322,7 @@
         <!-- Slot Kenangan & Riwayat Update -->
         <div class="bg-cardGray p-5 md:p-6 rounded-2xl border border-borderGray shadow-xl space-y-4">
             <div class="flex justify-between items-center border-b border-borderGray pb-3">
-                <h3 class="text-sm md:text-base font-semibold flex items-center gap-2 text-brandYellow">
+                <h3 class="text-sm md:text-base font-poppins font-semibold flex items-center gap-2 text-brandYellow">
                     <span>📜✨</span> Slot Kenangan & Riwayat Update DuitkuAkeh
                 </h3>
                 <span class="text-xs text-gray-400">Jejak Pembuatan & Versi</span>
@@ -321,10 +337,10 @@
                 </div>
                 <div class="bg-darkGray p-4 rounded-xl border border-borderGray space-y-2">
                     <div class="flex justify-between items-center font-semibold text-gray-200">
-                        <span>Versi 5.4 Pro (Mobile Optimized UI)</span>
+                        <span>Versi 5.5 Pro (Dark Theme Restored)</span>
                         <span class="text-blue-400">Terbaru</span>
                     </div>
-                    <p class="text-gray-400 leading-relaxed">Penyempurnaan total tampilan mobile (header aman tidak mentok, tombol header ringkas berbasis emoji, serta font antarmuka yang bersih, tajam, dan elegan di HP maupun laptop).</p>
+                    <p class="text-gray-400 leading-relaxed">Pengembalian tema warna gelap klasik (#121212 & #1E1E1E) dengan perpaduan hijau dan oranye yang nyaman di mata.</p>
                 </div>
                 <div class="bg-darkGray p-4 rounded-xl border border-borderGray space-y-2">
                     <div class="flex justify-between items-center font-semibold text-gray-200">
@@ -341,14 +357,14 @@
     <!-- Modal Tambah Dompet -->
     <div id="walletModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-all">
         <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl fade-in">
-            <h3 class="text-lg font-semibold" id="walletModalTitle">Tambah Dompet / Bank</h3>
+            <h3 class="text-lg font-poppins font-semibold" id="walletModalTitle">Tambah Dompet / Bank</h3>
             <form id="walletForm" class="space-y-3">
                 <input type="hidden" id="walletEditId">
                 <input type="text" id="walletNameInput" placeholder="Nama Dompet (cth: SeaBank)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
-                <input type="number" id="walletBalanceInput" placeholder="Saldo Awal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
+                <input type="number" id="walletBalanceInput" placeholder="Saldo Awal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200 font-mono-num">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeWalletModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl text-sm transition-all hover:bg-gray-700">Batal</button>
-                    <button type="submit" class="flex-1 bg-brandGreen text-darkGray font-bold py-2 rounded-xl text-sm transition-all hover:opacity-90">Simpan</button>
+                    <button type="submit" class="flex-1 bg-brandGreen text-darkGray font-poppins font-bold py-2 rounded-xl text-sm transition-all hover:opacity-90">Simpan</button>
                 </div>
             </form>
         </div>
@@ -357,10 +373,10 @@
     <!-- Modal Tambah Beban Rutin -->
     <div id="expenseItemModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-all">
         <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl fade-in">
-            <h3 class="text-lg font-semibold">Kelola Beban Rutin</h3>
+            <h3 class="text-lg font-poppins font-semibold">Kelola Beban Rutin</h3>
             <form id="expenseItemForm" class="space-y-3 text-xs">
                 <input type="text" id="expenseItemName" placeholder="Nama Beban (cth: Internet WiFi)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all text-gray-200">
-                <input type="number" id="expenseItemCost" placeholder="Estimasi Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all text-gray-200">
+                <input type="number" id="expenseItemCost" placeholder="Estimasi Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all text-gray-200 font-mono-num">
                 <select id="expenseItemFreq" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all text-gray-200">
                     <option value="month">Per Bulan</option>
                     <option value="year">Per Tahun</option>
@@ -369,7 +385,7 @@
                 </select>
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeExpenseItemModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl transition-all hover:bg-gray-700">Batal</button>
-                    <button type="submit" class="flex-1 bg-brandYellow text-darkGray font-bold py-2 rounded-xl transition-all hover:opacity-90">Tambah</button>
+                    <button type="submit" class="flex-1 bg-brandYellow text-darkGray font-poppins font-bold py-2 rounded-xl transition-all hover:opacity-90">Tambah</button>
                 </div>
             </form>
         </div>
@@ -378,14 +394,14 @@
     <!-- Modal Target Celengan -->
     <div id="goalModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-all">
         <div class="bg-cardGray border border-borderGray p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-2xl fade-in">
-            <h3 class="text-lg font-semibold">Buat Target Celengan</h3>
+            <h3 class="text-lg font-poppins font-semibold">Buat Target Celengan</h3>
             <form id="goalForm" class="space-y-3 text-xs">
                 <input type="text" id="goalNameInput" placeholder="Nama Impian (cth: Helm Baru)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
-                <input type="number" id="goalTargetInput" placeholder="Target Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
-                <input type="number" id="goalCurrentInput" placeholder="Terkumpul Saat Ini (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
+                <input type="number" id="goalTargetInput" placeholder="Target Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200 font-mono-num">
+                <input type="number" id="goalCurrentInput" placeholder="Terkumpul Saat Ini (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200 font-mono-num">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeGoalModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl transition-all hover:bg-gray-700">Batal</button>
-                    <button type="submit" class="flex-1 bg-brandYellow text-darkGray font-bold py-2 rounded-xl transition-all hover:opacity-90">Simpan</button>
+                    <button type="submit" class="flex-1 bg-brandYellow text-darkGray font-poppins font-bold py-2 rounded-xl transition-all hover:opacity-90">Simpan</button>
                 </div>
             </form>
         </div>
@@ -393,10 +409,10 @@
 
     <!-- Footer -->
     <footer class="text-center py-6 text-xs text-gray-500 border-t border-borderGray mt-auto">
-        DuitkuAkeh Pro v5.4 &copy; 2026 - Terintegrasi Database Lokal (LocalStorage) 🚀
+        DuitkuAkeh Pro v5.5 &copy; 2026 - Terintegrasi Database Lokal (LocalStorage) 🚀
     </footer>
 
-    <!-- JavaScript Logika Pro v5.4 -->
+    <!-- JavaScript Logika Pro v5.5 -->
     <script>
         document.getElementById('dateInput').valueAsDate = new Date();
 
@@ -432,7 +448,7 @@
 
         // Ekspor & Impor Semua Data
         window.exportAllData = () => {
-            const dataObj = { wallets, transactions, goals, expenseItems, debts, version: "5.4", date: new Date().toISOString() };
+            const dataObj = { wallets, transactions, goals, expenseItems, debts, version: "5.5", date: new Date().toISOString() };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
@@ -468,7 +484,7 @@
 
         // Ekspor & Impor Khusus Riwayat Transaksi Saja
         window.exportTransactionsOnly = () => {
-            const dataObj = { transactions, version: "5.4-tx", date: new Date().toISOString() };
+            const dataObj = { transactions, version: "5.5-tx", date: new Date().toISOString() };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
@@ -655,7 +671,7 @@
                 card.innerHTML = `
                     <div>
                         <p class="font-medium text-gray-200">${wallet.name}</p>
-                        <p class="${wallet.active ? 'text-brandGreen' : 'text-gray-500'} font-bold">${formatRupiah(wallet.balance)}</p>
+                        <p class="${wallet.active ? 'text-brandGreen' : 'text-gray-500'} font-bold font-mono-num">${formatRupiah(wallet.balance)}</p>
                     </div>
                     <div class="flex items-center gap-1">
                         <button onclick="openEditWalletModal('${wallet.id}')" class="text-[9px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded hover:bg-blue-500/30 transition-all">Edit</button>
@@ -697,7 +713,7 @@
                 const row = document.createElement('div');
                 row.className = `flex justify-between items-center ${item.active ? 'text-gray-300' : 'text-gray-500 line-through'}`;
                 row.innerHTML = `
-                    <span>${item.name} (${formatRupiah(item.cost)}/${item.freq})</span>
+                    <span>${item.name} (<span class="font-mono-num">${formatRupiah(item.cost)}</span>/${item.freq})</span>
                     <div class="flex gap-1">
                         <button onclick="toggleExpenseItem('${item.id}')" class="text-[9px] bg-borderGray px-1 rounded">${item.active ? 'Aktif' : 'Mati'}</button>
                         <button onclick="deleteExpenseItem('${item.id}')" class="text-[9px] text-red-400">✕</button>
@@ -721,7 +737,7 @@
                 itemDiv.innerHTML = `
                     <div>
                         <p class="font-bold ${isPaid ? 'text-brandGreen' : 'text-red-400'}">[${debt.type}] ${debt.detail}</p>
-                        <p class="text-[10px] text-gray-300 font-semibold">Sisa: ${formatRupiah(debt.amount)} • <span class="${isPaid ? 'text-brandGreen' : 'text-red-400'} font-bold">${debt.status}</span></p>
+                        <p class="text-[10px] text-gray-300 font-semibold">Sisa: <span class="font-mono-num">${formatRupiah(debt.amount)}</span> • <span class="${isPaid ? 'text-brandGreen' : 'text-red-400'} font-bold">${debt.status}</span></p>
                     </div>
                     <div class="flex items-center gap-1.5">
                         <button onclick="preparePayDebt(${index})" class="text-[10px] px-2 py-1 rounded font-bold transition-all ${isPaid ? 'bg-borderGray text-gray-400 cursor-not-allowed' : 'bg-brandBlue/20 text-brandBlue hover:bg-brandBlue/30'}" ${isPaid ? 'disabled' : ''}>
@@ -794,7 +810,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="font-semibold ${isIncome ? 'text-brandGreen' : 'text-brandYellow'}">${isIncome ? '+' : '-'} ${formatRupiah(tx.amount)}</span>
+                        <span class="font-semibold ${isIncome ? 'text-brandGreen' : 'text-brandYellow'} font-mono-num">${isIncome ? '+' : '-'} ${formatRupiah(tx.amount)}</span>
                         <button onclick="deleteTransaction(${originalIndex})" class="text-[10px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded hover:bg-red-500/30 transition-all">✕</button>
                     </div>
                 `;
@@ -817,7 +833,7 @@
                     <div class="flex justify-between font-medium items-center">
                         <span class="text-gray-200">${goal.name}</span>
                         <div class="flex items-center gap-2">
-                            <span class="text-brandYellow">${percent}%</span>
+                            <span class="text-brandYellow font-mono-num">${percent}%</span>
                             <button onclick="deleteGoal('${goal.id}')" class="text-[9px] text-red-400 hover:text-red-300">Hapus</button>
                         </div>
                     </div>
@@ -825,8 +841,8 @@
                         <div class="bg-brandYellow h-full transition-all duration-500" style="width: ${percent}%"></div>
                     </div>
                     <div class="flex justify-between text-[10px] text-gray-400">
-                        <span>${formatRupiah(goal.current)}</span>
-                        <span>Target: ${formatRupiah(goal.target)}</span>
+                        <span class="font-mono-num">${formatRupiah(goal.current)}</span>
+                        <span class="font-mono-num">Target: ${formatRupiah(goal.target)}</span>
                     </div>
                 `;
                 listEl.appendChild(item);
@@ -878,7 +894,7 @@
             
             const netEl = document.getElementById('netProfit');
             netEl.textContent = formatRupiah(netProfit);
-            netEl.className = `text-sm md:text-base font-bold ${netProfit >= 0 ? 'text-brandGreen' : 'text-brandYellow'}`;
+            netEl.className = `text-sm md:text-base font-poppins font-bold ${netProfit >= 0 ? 'text-brandGreen' : 'text-brandYellow'} font-mono-num`;
         };
 
         const updateTopTier = () => {
@@ -924,10 +940,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#9CA3AF', font: { size: 9 } } } },
+                    plugins: { legend: { labels: { color: '#9CA3AF', font: { size: 9, family: 'Inter' } } } },
                     scales: {
-                        x: { ticks: { color: '#9CA3AF', font: { size: 8 } }, grid: { color: '#2C2C2C' } },
-                        y: { ticks: { color: '#9CA3AF', font: { size: 8 } }, grid: { color: '#2C2C2C' } }
+                        x: { ticks: { color: '#9CA3AF', font: { size: 8, family: 'Inter' } }, grid: { color: '#2C2C2C' } },
+                        y: { ticks: { color: '#9CA3AF', font: { size: 8, family: 'JetBrains Mono' } }, grid: { color: '#2C2C2C' } }
                     }
                 }
             });
@@ -959,8 +975,8 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        x: { ticks: { color: '#9CA3AF', font: { size: 8 } }, grid: { display: false } },
-                        y: { ticks: { color: '#9CA3AF', font: { size: 8 } }, grid: { color: '#2C2C2C' } }
+                        x: { ticks: { color: '#9CA3AF', font: { size: 8, family: 'Inter' } }, grid: { display: false } },
+                        y: { ticks: { color: '#9CA3AF', font: { size: 8, family: 'JetBrains Mono' } }, grid: { color: '#2C2C2C' } }
                     }
                 }
             });
