@@ -4,24 +4,10 @@
   "display": "standalone",
   "name": "DuitkuAkeh",
   "orientation": "any",
-  "scope": "/DuitkuAkeh/",
+  "scope": "/",
   "short_name": "DuitkuAkeh",
-  "start_url": "/DuitkuAkeh/",
+  "start_url": "/https://fajar-insani.github.io/DuitkuAkeh/",
   "theme_color": "#10b981",
   "description": "Aplikasi akuntansi pribadi berbasis html dan javascript yang mampu mencatat aktivitas keuangan anda untuk mempertimbangkan pemasukan dan pengeluaran belanja.",
-  "lang": "id",
-  "icons": [
-    {
-      "src": "andou.png",
-      sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "andou.png",
-      sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
+  "lang": "id"
 }
