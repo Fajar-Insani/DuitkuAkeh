@@ -208,7 +208,7 @@
     <header class="bg-cardGray border-b border-borderGray py-3.5 px-4 md:px-6 sticky top-0 z-50 flex justify-between items-center shadow-lg backdrop-blur-md bg-opacity-95">
         <div class="flex items-center space-x-2.5">
             <div class="w-9 h-9 md:w-10 md:h-10 rounded-xl overflow-hidden bg-brandYellow/10 flex items-center justify-center border border-borderGray shadow-inner shrink-0">
-                <img src="andou.png" alt="Logo Andou" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/40/F59E0B/121212?text=💰';">
+                <img src="andou.webp" alt="Logo Andou" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://via.placeholder.com/40/F59E0B/121212?text=💰';">
             </div>
             <h1 class="text-base md:text-xl font-poppins font-bold tracking-tight">Duitku<span class="text-brandGreen">Akeh</span></h1>
         </div>
@@ -299,11 +299,11 @@
                         </div>
                         <div>
                             <label class="block text-gray-400 mb-1" id="amountLabel">Nominal (Rp)</label>
-                            <input type="number" id="amountInput" placeholder="Contoh: 25000" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-gray-200 transition-all font-mono-num">
+                            <input type="text" inputmode="numeric" autocomplete="off" id="amountInput" placeholder="Contoh: 25.000" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-gray-200 transition-all font-mono-num">
                         </div>
                         <div id="adminFeeWrapper" class="fade-in" style="display:none">
                             <label class="block text-gray-400 mb-1">Biaya Admin (Rp) <span class="text-brandYellow">*Wajib</span> <span class="text-gray-500 font-normal">isi 0 jika tanpa biaya</span></label>
-                            <input type="number" id="adminFeeInput" min="0" placeholder="Contoh: 2000" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-gray-200 transition-all font-mono-num">
+                            <input type="text" inputmode="numeric" autocomplete="off" id="adminFeeInput" placeholder="Contoh: 2.000" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-gray-200 transition-all font-mono-num">
                             <p class="text-[11px] text-gray-500 mt-1">Biaya admin dibebankan ke akun asal.</p>
                         </div>
                         <p id="transferPreview" class="fade-in text-[12px] bg-darkGray border border-borderGray rounded-xl p-2.5 text-gray-300" style="display:none"></p>
@@ -503,7 +503,7 @@
             <form id="walletForm" class="space-y-3">
                 <input type="hidden" id="walletEditId">
                 <input type="text" id="walletNameInput" placeholder="Nama Dompet (cth: SeaBank)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
-                <input type="number" id="walletBalanceInput" placeholder="Saldo Awal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200 font-mono-num">
+                <input type="text" inputmode="numeric" autocomplete="off" id="walletBalanceInput" placeholder="Saldo Awal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200 font-mono-num">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeWalletModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl text-sm transition-all hover:bg-gray-700">Batal</button>
                     <button type="submit" class="flex-1 bg-brandGreen text-darkGray font-poppins font-bold py-2 rounded-xl text-sm transition-all hover:opacity-90">Simpan</button>
@@ -518,7 +518,7 @@
             <h3 class="text-lg font-poppins font-semibold">Kelola Beban Rutin</h3>
             <form id="expenseItemForm" class="space-y-3 text-xs">
                 <input type="text" id="expenseItemName" placeholder="Nama Beban (cth: Internet WiFi)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all text-gray-200">
-                <input type="number" id="expenseItemCost" placeholder="Estimasi Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all text-gray-200 font-mono-num">
+                <input type="text" inputmode="numeric" autocomplete="off" id="expenseItemCost" placeholder="Estimasi Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all text-gray-200 font-mono-num">
                 <select id="expenseItemFreq" class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 focus:outline-none focus:border-brandGreen text-sm transition-all text-gray-200">
                     <option value="month">Per Bulan</option>
                     <option value="year">Per Tahun</option>
@@ -539,8 +539,8 @@
             <h3 class="text-lg font-poppins font-semibold">Buat Target Celengan</h3>
             <form id="goalForm" class="space-y-3 text-xs">
                 <input type="text" id="goalNameInput" placeholder="Nama Impian (cth: Helm Baru)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200">
-                <input type="number" id="goalTargetInput" placeholder="Target Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200 font-mono-num">
-                <input type="number" id="goalCurrentInput" placeholder="Terkumpul Saat Ini (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200 font-mono-num">
+                <input type="text" inputmode="numeric" autocomplete="off" id="goalTargetInput" placeholder="Target Nominal (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200 font-mono-num">
+                <input type="text" inputmode="numeric" autocomplete="off" id="goalCurrentInput" placeholder="Terkumpul Saat Ini (Rp)" required class="w-full bg-darkGray border border-borderGray rounded-xl p-2.5 text-sm focus:outline-none focus:border-brandGreen transition-all text-gray-200 font-mono-num">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeGoalModal()" class="flex-1 bg-borderGray text-gray-300 font-bold py-2 rounded-xl transition-all hover:bg-gray-700">Batal</button>
                     <button type="submit" class="flex-1 bg-brandYellow text-darkGray font-poppins font-bold py-2 rounded-xl transition-all hover:opacity-90">Simpan</button>
@@ -578,6 +578,14 @@
 
         const formatRupiah = (number) => {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+        };
+
+        // Nominal: tampil dengan titik ribuan (700.000), dibaca sebagai angka utuh
+        const fmtMoney = (n) => (n < 0 ? '-' : '') + String(Math.abs(Math.trunc(Number(n) || 0))).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        const parseMoney = (v) => {
+            const s = String(v == null ? '' : v).trim();
+            const d = s.replace(/\D/g, '');
+            return d ? (s.startsWith('-') ? -1 : 1) * Number(d) : 0;
         };
 
         const saveData = () => {
@@ -666,8 +674,8 @@
             const from = wallets.find(w => w.id === document.getElementById('walletSourceInput').value);
             const to = wallets.find(w => w.id === document.getElementById('walletTargetInput').value);
             if (document.getElementById('typeInput').value !== 'Transfer' || !from || !to) { box.style.display = 'none'; return; }
-            const amt = Number(document.getElementById('amountInput').value) || 0;
-            const fee = Number(document.getElementById('adminFeeInput').value) || 0;
+            const amt = parseMoney(document.getElementById('amountInput').value);
+            const fee = parseMoney(document.getElementById('adminFeeInput').value);
             box.style.display = 'block';
             box.innerHTML = `<span class="text-yellow-400 font-semibold">${from.name}</span> berkurang <b class="font-mono-num">${formatRupiah(amt + fee)}</b> • <span class="text-brandGreen font-semibold">${to.name}</span> bertambah <b class="font-mono-num">${formatRupiah(amt)}</b>`;
         };
@@ -963,7 +971,7 @@
                 if(detailInput && detailInput.tagName === 'SELECT') {
                     detailInput.value = debt.detail;
                 }
-                document.getElementById('amountInput').value = debt.amount;
+                document.getElementById('amountInput').value = fmtMoney(debt.amount);
                 window.scrollTo({ top: 400, behavior: 'smooth' });
             }, 50);
         };
@@ -1233,7 +1241,7 @@
             if(w) {
                 document.getElementById('walletEditId').value = w.id;
                 document.getElementById('walletNameInput').value = w.name;
-                document.getElementById('walletBalanceInput').value = w.balance;
+                document.getElementById('walletBalanceInput').value = fmtMoney(w.balance);
                 document.getElementById('walletModalTitle').textContent = 'Edit Dompet / Saldo';
                 document.getElementById('walletModal').classList.replace('hidden', 'flex');
             }
@@ -1249,7 +1257,7 @@
             e.preventDefault();
             const editId = document.getElementById('walletEditId').value;
             const name = document.getElementById('walletNameInput').value;
-            const balance = Number(document.getElementById('walletBalanceInput').value);
+            const balance = parseMoney(document.getElementById('walletBalanceInput').value);
 
             if(editId) {
                 const w = wallets.find(item => item.id === editId);
@@ -1263,13 +1271,13 @@
 
         document.getElementById('expenseItemForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            expenseItems.push({ id: Date.now().toString(), name: document.getElementById('expenseItemName').value, cost: Number(document.getElementById('expenseItemCost').value), freq: document.getElementById('expenseItemFreq').value, active: true });
+            expenseItems.push({ id: Date.now().toString(), name: document.getElementById('expenseItemName').value, cost: parseMoney(document.getElementById('expenseItemCost').value), freq: document.getElementById('expenseItemFreq').value, active: true });
             saveData(); closeExpenseItemModal(); document.getElementById('expenseItemForm').reset(); updateUI();
         });
 
         document.getElementById('goalForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            goals.push({ id: Date.now().toString(), name: document.getElementById('goalNameInput').value, target: Number(document.getElementById('goalTargetInput').value), current: Number(document.getElementById('goalCurrentInput').value) });
+            goals.push({ id: Date.now().toString(), name: document.getElementById('goalNameInput').value, target: parseMoney(document.getElementById('goalTargetInput').value), current: parseMoney(document.getElementById('goalCurrentInput').value) });
             saveData(); closeGoalModal(); document.getElementById('goalForm').reset(); updateUI();
         });
 
@@ -1277,7 +1285,7 @@
             e.preventDefault();
             const type = document.getElementById('typeInput').value;
             const walletId = document.getElementById('walletSourceInput').value;
-            const amount = Number(document.getElementById('amountInput').value);
+            const amount = parseMoney(document.getElementById('amountInput').value);
             const rawDate = document.getElementById('dateInput').value;
             const dateFormatted = new Date(rawDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
             
@@ -1294,8 +1302,8 @@
                 if (!wallet || !toWallet) { alert("Pilih akun asal dan akun tujuan terlebih dahulu!"); return; }
                 if (wallet.id === toWallet.id) { alert("Akun asal dan akun tujuan tidak boleh sama!"); return; }
                 if (!(amount > 0)) { alert("Nominal transfer harus lebih dari 0!"); return; }
-                if (feeRaw === '' || !Number.isFinite(Number(feeRaw)) || Number(feeRaw) < 0) { alert("Biaya admin wajib diisi (boleh 0)!"); return; }
-                const fee = Number(feeRaw);
+                if (feeRaw.trim() === '') { alert("Biaya admin wajib diisi (boleh 0)!"); return; }
+                const fee = parseMoney(feeRaw);
 
                 wallet.balance -= (amount + fee);   // akun asal menanggung nominal + biaya admin
                 toWallet.balance += amount;         // akun tujuan menerima nominal saja
@@ -1368,6 +1376,25 @@
             updateUI();
         });
 
+        // Titik ribuan otomatis saat mengetik (kursor tetap di tempatnya)
+        ['amountInput', 'adminFeeInput', 'walletBalanceInput', 'expenseItemCost', 'goalTargetInput', 'goalCurrentInput'].forEach(id => {
+            const el = document.getElementById(id);
+            const allowNeg = id === 'walletBalanceInput';
+            el.addEventListener('input', () => {
+                const raw = el.value;
+                const caret = el.selectionStart == null ? raw.length : el.selectionStart;
+                const digitsBefore = raw.slice(0, caret).replace(/\D/g, '').length;
+                const digits = raw.replace(/\D/g, '').slice(0, 15).replace(/^0+(?=\d)/, '');
+                let out = digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                if (allowNeg && raw.trim().startsWith('-')) out = '-' + out;
+                if (out === raw) return;
+                el.value = out;
+                let pos = 0, seen = 0;
+                while (pos < out.length && seen < digitsBefore) { if (/\d/.test(out[pos])) seen++; pos++; }
+                try { el.setSelectionRange(pos, pos); } catch (e) {}
+            });
+        });
+
         document.getElementById('resetDataBtn').addEventListener('click', () => {
             if(confirm("Reset seluruh data aplikasi?")) { localStorage.clear(); location.reload(); }
         });
@@ -1425,6 +1452,12 @@
             } catch (e) {}
         }
     })();
+    </script>
+    <!-- Pendaftaran service worker agar aplikasi bisa diinstal (ubah 'sw.js' jika nama file Anda berbeda) -->
+    <script>
+        if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+            window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+        }
     </script>
 </body>
 </html>
